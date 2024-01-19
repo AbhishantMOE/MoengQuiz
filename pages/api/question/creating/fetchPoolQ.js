@@ -22,7 +22,7 @@ async function fetchPoolList(req, res) {
 
   try {
     const data = await QuestionPoolSchema.find({
-      name: "Abhi",
+      name: poolName,
       visibility: true,
     });
     const poolQ = data[0].questions;
