@@ -16,6 +16,7 @@ import {
   SliderThumb,
   SliderMark,
   useToast,
+  Select,
   Alert,
   AlertIcon,
 } from "@chakra-ui/react";
@@ -26,6 +27,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import Head from "next/head";
+import { fetchPool } from "../services/fetchPools";
+import { getPoolQ } from "../services/fetchPoolQ";
+
+import useSWR from "swr";
+import axios from "axios";
 
 export default function CreateQuiz() {
   const router = useRouter();
@@ -35,21 +41,86 @@ export default function CreateQuiz() {
   const [description, setDescription] = useState("");
   const [scheduledFor, setScheduledFor] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
+  const [pool, setPool] = useState("");
+  const [list, setList] = useState([]);
+  const [poolq, setPoolQ] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
   const { data: session } = useSession();
 
+  // const fetcher = (url) => axios.get(url, fetcher).then((resp) => resp.data);
+  // const { data: modifiedList } = useSWR(
+  //   "/api/question/creating/fetchPools",
+  //   fetcher
+  // );
+
+  const getList = () => {
+    fetchPool().then((data) => {
+      setList(data);
+    });
+  };
+
+  const getPoolQuestions = (pool) => {
+    console.log("Val passed in fun", pool);
+    getPoolQ(pool).then((data) => {
+      const quiz = {
+        title: title,
+        duration: duration,
+        description: description,
+        authorId: session.user.id,
+        scheduledFor: scheduledFor,
+        endTime: endTime,
+        questions: data,
+      };
+      ///////////////////
+      createQuiz(quiz)
+        .then((data) => {
+          if (data?.message) {
+            //resetForm();
+            toast({
+              title: "Success",
+              description: data?.message,
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            });
+            router.push(
+              {
+                pathname: "/quiz_detail",
+                query: { quizId: data?.quizId },
+              },
+              "/quiz_detail"
+            );
+          } else {
+            toast({
+              title: "Error",
+              description: data?.error,
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            });
+          }
+          //resetForm();
+        })
+        .finally(() => setLoading(false));
+    });
+  };
+
   const clickSubmit = async () => {
     setLoading(true);
-    const quiz = {
-      title: title,
-      duration: duration,
-      description: description,
-      authorId: session.user.id,
-      scheduledFor: scheduledFor,
-      endTime: endTime,
-    };
+    getPoolQuestions(pool);
+    console.log("=====>poolq", poolq);
+
+    // const quiz = {
+    //   title: title,
+    //   duration: duration,
+    //   description: description,
+    //   authorId: session.user.id,
+    //   scheduledFor: scheduledFor,
+    //   endTime: endTime,
+    //   questions: poolq,
+    // };
 
     const resetForm = () => {
       setTitle("");
@@ -57,37 +128,6 @@ export default function CreateQuiz() {
       setDuration(10);
       setLoading(false);
     };
-
-    createQuiz(quiz)
-      .then((data) => {
-        if (data?.message) {
-          resetForm();
-          toast({
-            title: "Success",
-            description: data?.message,
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
-          router.push(
-            {
-              pathname: "/quiz_detail",
-              query: { quizId: data?.quizId },
-            },
-            "/quiz_detail"
-          );
-        } else {
-          toast({
-            title: "Error",
-            description: data?.error,
-            status: "error",
-            duration: 9000,
-            isClosable: true,
-          });
-        }
-        resetForm();
-      })
-      .finally(() => setLoading(false));
   };
 
   return (
@@ -119,7 +159,9 @@ export default function CreateQuiz() {
                   color={"gray.500"}
                   placeholder={"React Native"}
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
                 />
               </FormControl>
               <FormControl id="description">
@@ -172,6 +214,18 @@ export default function CreateQuiz() {
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
                 />
+              </FormControl>
+              <FormControl id="SelectedPool">
+                <FormLabel>Select Question Pool (Optional)</FormLabel>
+                <Select
+                  onClick={() => getList()}
+                  placeholder="Choose the Question Pool"
+                  onChange={(e) => setPool(e.target.value)}
+                >
+                  {list.map((item, index) => (
+                    <option value={item.name}>{item.name}</option>
+                  ))}
+                </Select>
               </FormControl>
               <Stack spacing={10} my={8}>
                 <Button

@@ -7,7 +7,7 @@ const QuestionPool = new Schema({
   authorId: { type: String },
   visibility: { type: Boolean },
   description: { type: String },
-  questions: { type: [QuestionSchema] },
+  questions: { type: Array },
   count: { type: Number },
 });
 
