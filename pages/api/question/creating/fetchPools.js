@@ -13,9 +13,13 @@ async function fetchPoolList(req, res) {
 
   try {
     const list = await QuestionPoolSchema.find({ visibility: true });
+    console.log(list);
     const modifiedList = list.map((item) => ({
       name: item.name,
       count: item.questions.length,
+      easy: item?.easy,
+      medium: item?.medium,
+      hard: item?.hard,
     }));
     console.log("====>modlist", modifiedList);
     return res.status(200).json(modifiedList);

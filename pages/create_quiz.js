@@ -19,6 +19,11 @@ import {
   Select,
   Alert,
   AlertIcon,
+  HStack,
+  TagLabel,
+  TagCloseButton,
+  Tag,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FiEdit3 } from "react-icons/fi";
 import { MdGraphicEq } from "react-icons/md";
@@ -32,22 +37,42 @@ import { getPoolQ } from "../services/fetchPoolQ";
 
 import useSWR from "swr";
 import axios from "axios";
-
+// import QuestionSelector from "../components/quiz/QuizSelector";
+import { PoolListAccordian } from "../components/quiz/QuizPoolAccordian";
+import PoolQModal from "../components/quiz/PoolModal";
 export default function CreateQuiz() {
   const router = useRouter();
   const toast = useToast();
+  const [poolDetail, setPoolDetail] = useState([]); /// added
   const [duration, setDuration] = useState(10);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [scheduledFor, setScheduledFor] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [pool, setPool] = useState("");
-  const [list, setList] = useState([]);
   const [poolq, setPoolQ] = useState([]);
 
   const [loading, setLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure(); // for Modal
 
   const { data: session } = useSession();
+
+  const [poolSelectPref, setPoolSelectPref] = useState([]);
+
+  const setPoolPref = (item) => {
+    if (!poolSelectPref.find((element) => element.name == item.name))
+      setPoolSelectPref([...poolSelectPref, item]);
+    else {
+      toast({
+        title: "Pool Already Added",
+        description: "Duplicate Pool",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+  console.log("====>pool pref", poolSelectPref);
 
   // const fetcher = (url) => axios.get(url, fetcher).then((resp) => resp.data);
   // const { data: modifiedList } = useSWR(
@@ -55,11 +80,11 @@ export default function CreateQuiz() {
   //   fetcher
   // );
 
-  const getList = () => {
-    fetchPool().then((data) => {
-      setList(data);
-    });
-  };
+  // const getList = () => {
+  //   fetchPool().then((data) => {
+  //     setList(data);
+  //   });
+  // };
 
   const getPoolQuestions = (pool) => {
     console.log("Val passed in fun", pool);
@@ -110,7 +135,6 @@ export default function CreateQuiz() {
   const clickSubmit = async () => {
     setLoading(true);
     getPoolQuestions(pool);
-    console.log("=====>poolq", poolq);
 
     // const quiz = {
     //   title: title,
@@ -204,6 +228,9 @@ export default function CreateQuiz() {
                   onChange={(e) => setScheduledFor(e.target.value)}
                 />
               </FormControl>
+              {/* {poolDetail.length && 
+
+              } */}
               <FormControl id="endTime">
                 <FormLabel>Quiz End Date and Time</FormLabel>
                 <Input
@@ -215,7 +242,45 @@ export default function CreateQuiz() {
                   onChange={(e) => setEndTime(e.target.value)}
                 />
               </FormControl>
-              <FormControl id="SelectedPool">
+
+              {/* <HStack
+                spacing={4}
+                border="1px"
+                borderRadius="2xl"
+                borderColor="gray"
+                padding="5px"
+              >
+                {["lg", "lg", "lg"].map((size) => (
+                  <Tag
+                    size={size}
+                    key={size}
+                    borderRadius="full"
+                    variant="solid"
+                    colorScheme="green"
+                  >
+                    <TagLabel>Green</TagLabel>
+                    <TagCloseButton />
+                  </Tag>
+                ))}
+              </HStack> */}
+
+              {/* diff
+               */}
+              {poolSelectPref.length && (
+                <PoolListAccordian list={poolSelectPref} />
+              )}
+
+              <PoolQModal
+                isOpen={isOpen}
+                onOpen={onOpen}
+                onClose={onClose}
+                setPoolPref={setPoolPref}
+              />
+              <Button colorScheme="teal" size="sm" onClick={onOpen}>
+                Add Pools
+              </Button>
+
+              {/* <FormControl id="SelectedPool">
                 <FormLabel>Select Question Pool (Optional)</FormLabel>
                 <Select
                   onClick={() => getList()}
@@ -226,7 +291,7 @@ export default function CreateQuiz() {
                     <option value={item.name}>{item.name}</option>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
               <Stack spacing={10} my={8}>
                 <Button
                   bg="#00237c"

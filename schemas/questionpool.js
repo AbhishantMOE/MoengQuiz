@@ -9,6 +9,9 @@ const QuestionPool = new Schema({
   description: { type: String },
   questions: { type: Array },
   count: { type: Number },
+  easy: { type: Number },
+  medium: { type: Number },
+  hard: { type: Number },
 });
 
 export default mongoose.models.QuestionPool ||

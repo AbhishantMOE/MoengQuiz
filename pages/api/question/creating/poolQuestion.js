@@ -19,6 +19,7 @@ async function createPoolQuestion(req, res) {
     correctAnswer,
     type,
     imageUrl,
+    difficulty,
     quizId,
   } = req.body;
 
@@ -32,48 +33,58 @@ async function createPoolQuestion(req, res) {
     switch (type) {
       case "MCQ":
         newQuestion = new Question({
-          quizId: poolName,
+          quizId,
+          poolName,
           description,
           options,
           correctAnswer,
+          difficulty,
           type,
         });
         break;
 
       case "Reorder":
         newQuestion = new Question({
-          quizId: poolName,
+          quizId,
+          poolName,
           description,
           options,
+          difficulty,
           type,
         });
         break;
 
       case "MCM":
         newQuestion = new Question({
-          quizId: poolName,
+          quizId,
+          poolName,
           description,
           options,
           correctAnswer,
+          difficulty,
           type,
         });
         break;
 
       case "True/False":
         newQuestion = new Question({
-          quizId: poolName,
+          quizId,
+          poolName,
           description,
           options: ["True", "False"],
           correctAnswer,
+          difficulty,
           type,
         });
         break;
 
       case "Hotspot":
         newQuestion = new Question({
-          quizId: poolName,
+          quizId,
+          poolName,
           description,
           correctAnswer: correctAnswer,
+          difficulty,
           type,
           imageUrl,
         });
@@ -88,13 +99,24 @@ async function createPoolQuestion(req, res) {
     console.log("======>", newQuestion);
 
     await newQuestion.save();
+
+    //////////
+    let fieldToUpdate;
+    if (difficulty == "easy") {
+      fieldToUpdate = { easy: 1 };
+    } else if (difficulty == "medium") {
+      fieldToUpdate = { medium: 1 };
+    } else fieldToUpdate = { hard: 1 };
+
     const quiz = await QuestionPoolSchema.updateOne(
       { name: poolName },
-
       {
         $push: { questions: newQuestion },
+        $inc: { count: 1 },
+        $inc: fieldToUpdate,
         authorId: authorId,
         visibility: false,
+        poolName: poolName,
       },
       { upsert: true }
     );

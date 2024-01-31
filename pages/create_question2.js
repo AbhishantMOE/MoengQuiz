@@ -47,6 +47,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [options1, setOptions] = useState([""]);
   const [sentences, setSentences] = useState([""]);
+  const [difficulty, setDifficulty] = useState("");
 
   const handleAddSentence = () => {
     setSentences([...sentences, ""]);
@@ -143,6 +144,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
         description,
         options: options1,
         correctAnswer,
+        difficulty,
         type: "MCQ",
       };
     }
@@ -154,6 +156,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
         description,
         options: options1,
         correctAnswer,
+        difficulty,
         type: "MCM",
       };
     }
@@ -165,6 +168,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
         description,
         matches: pairs,
         type: "Match the following",
+        difficulty,
       };
     }
     if (questionType === "tf") {
@@ -176,6 +180,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
         description,
         options: options1,
         correctAnswer,
+        difficulty,
         type: "True/False",
       };
     }
@@ -200,6 +205,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
         authorId,
         description,
         correctAnswer: ans,
+        difficulty,
         type: "Hotspot",
         imageUrl: image_url,
       };
@@ -211,6 +217,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
         authorId,
         description,
         options: sentences,
+        difficulty,
         type: "Reorder",
       };
     }
@@ -284,6 +291,18 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                   <option value="hotspot">Hotspot</option>
                 </Select>
               </FormControl>
+              {/* ////NEWWW//////// */}
+              <RadioGroup
+                onChange={(val) => setDifficulty(val)}
+                value={difficulty}
+              >
+                <Stack direction="row">
+                  <Radio value="easy">Easy</Radio>
+                  <Radio value="medium">Medium</Radio>
+                  <Radio value="hard">Hard</Radio>
+                </Stack>
+              </RadioGroup>
+              {/* ////// */}
               <FormControl id="description" as={GridItem} colSpan={6}>
                 <FormLabel>Question</FormLabel>
                 <Textarea
@@ -370,7 +389,6 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                   </Select>
                 </FormControl>
               )}
-
               {/* Match the following */}
               {questionType === "mtf" && <>to be added</>}
               {/* reorder sentence */}
