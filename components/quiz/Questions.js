@@ -144,7 +144,7 @@ const QuestionItem = ({
               <Box flex="1" textAlign="left" fontFamily={"Poppins"}>
                 {question?.description}
                 <Tag ml={3} size="md" variant="solid" colorScheme="blue">
-                  {question.poolName}
+                  {question?.poolName}
                 </Tag>
               </Box>
               <HStack spacing={4}>
@@ -152,14 +152,14 @@ const QuestionItem = ({
                   size="md"
                   variant="solid"
                   colorScheme={
-                    question.difficulty === "easy"
+                    question?.difficulty === "easy"
                       ? "green"
-                      : question.difficulty === "medium"
+                      : question?.difficulty === "medium"
                       ? "yellow"
                       : "red"
                   }
                 >
-                  {question.difficulty}
+                  {question?.difficulty}
                 </Tag>
                 <Tooltip
                   label={"Edit Question"}

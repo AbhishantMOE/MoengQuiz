@@ -34,7 +34,7 @@ import Layout from "../components/Layout";
 import Head from "next/head";
 import { fetchPool } from "../services/fetchPools";
 import { getPoolQ } from "../services/fetchPoolQ";
-
+import { useEffect } from "react";
 import useSWR from "swr";
 import axios from "axios";
 // import QuestionSelector from "../components/quiz/QuizSelector";
@@ -59,20 +59,23 @@ export default function CreateQuiz() {
 
   const [poolSelectPref, setPoolSelectPref] = useState([]);
 
+  useEffect(() => {
+    console.log(poolSelectPref, "-------");
+  }, [poolSelectPref]);
+
   const setPoolPref = (item) => {
-    if (!poolSelectPref.find((element) => element.name == item.name))
+    if (!poolSelectPref.find((element) => element.name == item.name)) {
       setPoolSelectPref([...poolSelectPref, item]);
-    else {
+    } else {
       toast({
         title: "Pool Already Added",
         description: "Duplicate Pool",
         status: "error",
-        duration: 9000,
+        duration: 3000,
         isClosable: true,
       });
     }
   };
-  console.log("====>pool pref", poolSelectPref);
 
   // const fetcher = (url) => axios.get(url, fetcher).then((resp) => resp.data);
   // const { data: modifiedList } = useSWR(
@@ -86,9 +89,16 @@ export default function CreateQuiz() {
   //   });
   // };
 
-  const getPoolQuestions = (pool) => {
-    console.log("Val passed in fun", pool);
-    getPoolQ(pool).then((data) => {
+  const getPoolQIndividual = async (poolName) => {
+    const data = await getPoolQ(poolName);
+    return data;
+  };
+
+  const getPoolQuestions = async (poolList) => {
+    let list = await Promise.all(
+      poolList.map((item) => getPoolQIndividual(item.name))
+    ).then((data) => {
+      console.log("=====>quiz DAta", data);
       const quiz = {
         title: title,
         duration: duration,
@@ -96,7 +106,7 @@ export default function CreateQuiz() {
         authorId: session.user.id,
         scheduledFor: scheduledFor,
         endTime: endTime,
-        questions: data,
+        questions: data.flat(),
       };
       ///////////////////
       createQuiz(quiz)
@@ -134,7 +144,7 @@ export default function CreateQuiz() {
 
   const clickSubmit = async () => {
     setLoading(true);
-    getPoolQuestions(pool);
+    getPoolQuestions(poolSelectPref);
 
     // const quiz = {
     //   title: title,

@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 
 export const PoolListAccordian = ({ list }) => {
-  console.log("his is list", list);
+  // console.log("his is list", list);
   return (
     <Accordion allowMultiple>
       {list.map((item) => {

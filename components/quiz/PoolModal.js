@@ -1,5 +1,6 @@
 import {
   Button,
+  useToast,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -40,15 +41,13 @@ function PoolQModal({ isOpen, onOpen, onClose, setPoolPref }) {
   const [easyQN, setEasyQN] = useState(0);
   const [mediumQN, setMediumQN] = useState(0);
   const [hardQN, setHardQN] = useState(0);
-
+  const toast = useToast();
   const getList = () => {
     fetchPool().then((data) => {
       console.log(data, "datatastast");
       setList(data);
     });
   };
-
-  console.log("====>", pool);
 
   return (
     <>
@@ -174,6 +173,16 @@ function PoolQModal({ isOpen, onOpen, onClose, setPoolPref }) {
               <Button
                 colorScheme="blue"
                 onClick={() => {
+                  if (pool == "") {
+                    toast({
+                      title: "Pool Not Selected",
+                      description: "Select Pool",
+                      status: "error",
+                      duration: 3000,
+                      isClosable: true,
+                    });
+                    return;
+                  }
                   setPoolPref({
                     name: pool.name,
                     count: pool.count,
