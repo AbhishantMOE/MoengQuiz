@@ -13,9 +13,13 @@ import {
     useColorModeValue,
     useToast,
     Checkbox,
-    CheckboxGroup
+    CheckboxGroup,
+    Image,
+    FormControl,
+    FormLabel,
+    Select,
+    MenuItem
 } from "@chakra-ui/react";
-import { Icon } from '@chakra-ui/react';
 import Countdown from "../components/Countdown";
 import Layout from "../components/Layout";
 import ConfirmDialog from "../components/common/ConfirmDialog";
@@ -26,8 +30,6 @@ import axios from "axios";
 import useSWR from "swr";
 import { submitQuiz, resetQuiz } from "../services/quiz";
 import Head from "next/head"
-import { Image } from "@chakra-ui/image";
-
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -46,8 +48,96 @@ export default function Quiz() {
     const [totalDuration, setTotalDuration] = useState(0);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showResetModal, setShowResetModal] = useState(false);
-    const [marker, setMarker] = useState({ top: null, left: null });
+    const [marker, setMarker] = useState({ top: 0, left: 0, width: null, height: null });
     const [dragging, setDragging] = useState(false);
+    const [fullscreenWarnings, setFullscreenWarnings] = useState(0);
+
+    function launchFullScreen(element) {
+        if (element?.requestFullscreen) {
+            element.requestFullscreen().catch((error) => {
+                console.error('Fullscreen mode failed to launch:', error);
+            });
+        } else if (element?.mozRequestFullScreen) {
+            element.mozRequestFullScreen().catch((error) => {
+                console.error('Fullscreen mode failed to launch:', error);
+            });
+        } else if (element?.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen().catch((error) => {
+                console.error('Fullscreen mode failed to launch:', error);
+            });
+        } else if (element?.msRequestFullscreen) {
+            element.msRequestFullscreen().catch((error) => {
+                console.error('Fullscreen mode failed to launch:', error);
+            });
+        }
+    }
+
+    const handleFillChange = (selectedValue, index) => {
+        const newState = [...allAns];
+        if (!newState[currentQuestion].selectedOption) {
+          newState[currentQuestion].selectedOption = {};
+        }
+        newState[currentQuestion].selectedOption['Option' + index] = selectedValue;
+        setAllAns(newState);
+        setCurrentAns(newState[currentQuestion].selectedOption);
+      };
+
+    useEffect(() => {
+        const fullscreenCheckInterval = setInterval(() => {
+
+            if (!document.fullscreenElement) {
+                setFullscreenWarnings(warnings => warnings + 1);
+
+                toast({
+                    title: "Warning",
+                    description: "Please remain in fullscreen mode.",
+                    status: "warning",
+                    duration: 5000,
+                    isClosable: true,
+                });
+
+                launchFullScreen(document.documentElement);
+
+                if (fullscreenWarnings >= 3) {
+                    console.log(`User has received ${fullscreenWarnings + 1} warnings about staying in fullscreen.`);
+                    resetQuiz();
+                    setShowResetModal(false);
+                    router.replace(`/quizzes`);
+                }
+            }
+        }, 5000);
+
+        return () => clearInterval(fullscreenCheckInterval);
+    }, [toast, fullscreenWarnings]);
+
+    useEffect(() => {
+        const preventReload = (event) => {
+            event.preventDefault();
+            event.returnValue = 'Reloading the quiz would submit the quiz';
+            return event.returnValue;
+        };
+
+        const handleKeyDown = (event) => {
+            if ((event.key === 'F5') || (event.ctrlKey && event.key === 'r' || (event.metaKey && event.key === 'r'))) {
+                event.preventDefault();
+                toast({
+                    title: "Warning",
+                    description: "Reloading the quiz would result in quiz submission",
+                    status: "warning",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        };
+
+        window.addEventListener('beforeunload', preventReload);
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('beforeunload', preventReload);
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [toast]);
 
     const { data } = useSWR(`/api/quiz/student?quizId=${quizId}`, fetcher);
 
@@ -58,7 +148,7 @@ export default function Quiz() {
         let currQues = currentQuestion + 1;
         setCurrentStep(currentStep + 1);
         setCurrentQuestion(currentQuestion + 1);
-        setCurrentAns(allAns[currQues].selectedOption);
+        setCurrentAns(allAns[currQues]?.selectedOption);
     };
 
     /**
@@ -69,7 +159,7 @@ export default function Quiz() {
         let currQues = currentQuestion - 1;
         setCurrentStep(currentStep - 1);
         setCurrentQuestion(currentQuestion - 1);
-        setCurrentAns(allAns[currQues].selectedOption);
+        setCurrentAns(allAns[currQues]?.selectedOption);
     };
     // Prev Btn
     const prevBtn = () => {
@@ -103,11 +193,17 @@ export default function Quiz() {
         setCurrentAns(newValue);
     };
     const handleMCMChange = (selectedValues) => {
-        console.log(selectedValues); 
-    
         const newState = [...allAns];
         newState[currentQuestion].selectedOption = selectedValues;
-    
+
+        setAllAns(newState);
+        setCurrentAns(selectedValues);
+    };
+
+    const handleHotspotChange = (selectedValues) => {
+        const newState = [...allAns];
+        newState[currentQuestion].selectedOption = selectedValues;
+
         setAllAns(newState);
         setCurrentAns(selectedValues);
     };
@@ -115,6 +211,19 @@ export default function Quiz() {
      * Submit the quiz to the backend
      */
     const clickSubmit = () => {
+
+        if (document.fullscreenElement) {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+
         let submitData = allAns.map(ans => {
             if (Array.isArray(ans.selectedOption)) {
                 return { ...ans, selectedOption: ans.selectedOption.join(',') };
@@ -127,12 +236,29 @@ export default function Quiz() {
             { questions: submitData }
         ).then((data) => {
             router.replace(
-                { pathname: "/results", query: { attemptId: data.attemptId } },
+                {
+                    pathname: "/results",
+                    query: { attemptId: data.attemptId, quizTakenId: data.quizTakenId }
+                },
                 "/results"
             );
         });
     };
 
+    const recordHotspotAnswer = (event) => {
+        const rect = event.target.getBoundingClientRect();
+        const x = Math.round(event.clientX - rect.left);
+        const y = Math.round(event.clientY - rect.top);
+
+        setMarker({ top: y, left: x, width: null, height: null });
+        setTimeout(5000);
+
+        const newState = [...allAns];
+        newState[currentQuestion].selectedOption = marker;
+
+        setAllAns(newState);
+        setCurrentAns(marker);
+    };
     /**
      * this method takes in the current quiz duration and returns the future end time for the quiz for the countdown component
      */
@@ -151,6 +277,7 @@ export default function Quiz() {
      * @param duration
      */
 
+
     const setupQuiz = (questions, duration) => {
         var questionsData = [];
         var answerData = [];
@@ -159,6 +286,8 @@ export default function Quiz() {
         if (questions?.length === 0) {
             return;
         }
+
+        console.log(questions,"questions")
 
         questions?.map((ques) => {
             let questObj
@@ -192,8 +321,16 @@ export default function Quiz() {
                     type: ques?.type
                 };
             }
+            else if (ques.type === "Fill") {
+                questObj = {
+                    text: ques?.description,
+                    type: ques?.type,
+                    dropdowns: ques?.dropdowns
+                }
+            }
 
             questionsData.push(questObj);
+
             let ansObj = {
                 selectedOption: null,
             };
@@ -223,25 +360,7 @@ export default function Quiz() {
         setShowResetModal(false);
         router.replace(`/quizzes`);
     };
-
-    const startDraw = (event) => {
-        const rect = event.target.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        setMarker({ top: y, left: x });
-        setDragging(false);
-    }
-    const draw = () => {
-
-    }
-    const endDraw = () => {
-        setDragging(false);
-        getBoxCoordinates();
-    }
-
-    const getBoxCoordinates = () => {
-        return marker
-    }
+    console.log(allAns);
 
     return (
         <Box fontFamily={"Poppins"}>
@@ -282,57 +401,16 @@ export default function Quiz() {
                             <Text size={"md"} mb={3}>
                                 {allQuestions[currentQuestion]?.text}
                             </Text>
-                            {/* {allQuestions[currentQuestion]?.type === "Hotspot" && (
-                            <>
-                                <Box position="relative"> 
-                                <Image
-                                    boxSize="200px"
-                                    src={allQuestions[currentQuestion]?.imageUrl}
-                                    onMouseDown={startDraw}
-                                    onMouseUp={endDraw}
-                                    onDragStart={(event) => event.preventDefault()}
-                                    alt="Hotspot"
-                                    style={{display: 'block', width: '100%', height: 'auto'}}
-                                />
-                                {marker &&
-                                    <Icon
-                                        boxSize={5} 
-                                        viewBox="0 0 24 24" 
-                                        stroke="currentColor"
-                                        fill="none" 
-                                        style={{
-                                            position: 'absolute',
-                                            top: marker.top + 'px', 
-                                            left: marker.left + 'px'
-                                        }}
-                                    >
-
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </Icon>
-                                }
-                                </Box>
-                            </>)} */}
                             {allQuestions[currentQuestion]?.type === "MCQ" && (
                                 <RadioGroup onChange={handleChange} value={currentAns}>
                                     <Stack direction="column" spacing={4}>
                                         {allQuestions[currentQuestion]?.options.map((opt, i) => (
-                                            <Radio value={opt} key={i}>{opt}</Radio>
+                                            <Radio value={opt} key={`${allQuestions[currentQuestion]?.text}-${opt}`}>{opt}</Radio>
                                         ))}
                                     </Stack>
                                 </RadioGroup>
                             )}
-                            {allQuestions[currentQuestion]?.type === "MCM" && (
-                                <CheckboxGroup
-                                value={currentAns || []} 
-                                onChange={handleMCMChange}
-                            >
-                                <Stack direction="column" spacing={4}>
-                                    {allQuestions[currentQuestion]?.options.map((opt, i) => (
-                                        <Checkbox value={opt} key={i}>{opt}</Checkbox>
-                                    ))}
-                                </Stack>
-                            </CheckboxGroup>
-                            )}
+
                             {allQuestions[currentQuestion]?.type === "True/False" && (
                                 <>
                                     <Text size={"md"} mb={3}>
@@ -346,14 +424,80 @@ export default function Quiz() {
                                         <Stack spacing={4} direction={"column"}>
                                             {allQuestions[currentQuestion]?.options.map(
                                                 (opt, i) => (
-                                                    <Radio value={opt} key={opt}>
+                                                    <Radio value={opt} key={`${allQuestions[currentQuestion]?.text}-${opt}`}>
                                                         {opt}
                                                     </Radio>
                                                 )
                                             )}
                                         </Stack>
                                     </RadioGroup>
-                                </>)}
+                                </>)
+                            }
+                            {allQuestions[currentQuestion]?.type === "MCM" && (
+                                <CheckboxGroup
+                                    value={currentAns || []}
+                                    onChange={handleMCMChange}
+                                >
+                                    <Stack direction="column" spacing={4}>
+                                        {allQuestions[currentQuestion]?.options.map((opt, i) => (
+                                            <Checkbox value={opt} key={`${allQuestions[currentQuestion]?.text}-${opt}`}>{opt}</Checkbox>
+                                        ))}
+                                    </Stack>
+                                </CheckboxGroup>
+                            )}
+                                {allQuestions[currentQuestion]?.type === "Fill" && (
+                                    <Box padding="10px">
+                                        {allQuestions[currentQuestion]?.dropdowns.map((dropdown, index) => (
+                                            <FormControl key={index} marginY="10px">
+                                                <FormLabel>Select for blank {index + 1}:</FormLabel>
+                                                <Select
+                                                    placeholder="Select option"
+                                                    size="md"
+                                                    variant="filled"
+                                                    onChange={(e) => handleFillChange(e.target.value, index)}
+                                                    value={currentAns ? currentAns['Option' + index] : ''}
+                                                >
+                                                    {dropdown.options.map((option, i) =>
+                                                        <option key={`${allQuestions[currentQuestion]}-Option${index}-${option}`} value={option}>{option}</option>
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        ))}
+                                    </Box>
+                                )}
+
+                            {allQuestions[currentQuestion]?.type === "Hotspot" && (
+                                <Box position="relative">
+                                    <Image
+                                        boxSize="200px"
+                                        src={allQuestions[currentQuestion]?.imageUrl}
+                                        alt="Hotspot"
+                                        onClick={recordHotspotAnswer}
+                                        key={`${allQuestions[currentQuestion]?.text}-${allQuestions[currentQuestion]?.imageUrl}`}
+                                        style={{
+                                            position: "relative",
+                                            display: "inline-block",
+                                            overflow: "hidden",
+                                            width: "750px",
+                                            height: "500px",
+                                        }}
+                                    />
+                                    {marker && (
+                                        <Box
+                                            style={{
+                                                position: 'absolute',
+                                                top: marker.top + 'px',
+                                                left: marker.left + 'px',
+                                                width: '10px',
+                                                height: '10px',
+                                                backgroundColor: 'red',
+                                                borderRadius: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                            }}
+                                        ></Box>
+                                    )}
+                                </Box>
+                            )}
 
                             <Stack spacing={10} direction={"row"} mt={5}>
                                 {prevBtn()}
@@ -363,7 +507,6 @@ export default function Quiz() {
                     </Stack>
                 )}
             </Flex>
-            {/* Dialog Box to confirm quiz submission */}
             <ConfirmDialog
                 isOpen={showConfirmModal}
                 onClose={setShowConfirmModal}
@@ -398,7 +541,7 @@ const QuizBtn = ({ text, onClick }) => (
 
 Quiz.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout showAppBar={false}>
             {page}
         </Layout>
     )

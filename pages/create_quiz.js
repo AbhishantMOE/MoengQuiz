@@ -31,6 +31,7 @@ import { createQuiz } from "../services/quiz";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
+
 import Head from "next/head";
 import { fetchPool } from "../services/fetchPools";
 import { getPoolQ } from "../services/fetchPoolQ";
@@ -45,6 +46,8 @@ export default function CreateQuiz() {
   const toast = useToast();
   const [poolDetail, setPoolDetail] = useState([]); /// added
   const [duration, setDuration] = useState(10);
+  const [noOfQuestions, setNoOfQuestions] = useState(10);
+  const [passingMarks, setPassingMarks] = useState(85);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [scheduledFor, setScheduledFor] = useState(new Date());
@@ -107,12 +110,19 @@ export default function CreateQuiz() {
         scheduledFor: scheduledFor,
         endTime: endTime,
         questions: data.flat(),
+        passingMarks: passingMarks,
+            noOfQuestions:noOfQuestions
       };
-      ///////////////////
+      const resetForm = () => {
+            setTitle("");
+            setDescription("");
+            setDuration(10);
+            setLoading(false);
+        };
       createQuiz(quiz)
         .then((data) => {
           if (data?.message) {
-            //resetForm();
+            resetForm();
             toast({
               title: "Success",
               description: data?.message,
@@ -136,7 +146,7 @@ export default function CreateQuiz() {
               isClosable: true,
             });
           }
-          //resetForm();
+          resetForm();
         })
         .finally(() => setLoading(false));
     });
@@ -252,6 +262,28 @@ export default function CreateQuiz() {
                   onChange={(e) => setEndTime(e.target.value)}
                 />
               </FormControl>
+              <FormControl id="passing marks">
+                  <FormLabel>Passing %</FormLabel>
+                  <Input
+                    variant={"flushed"}
+                    color={"gray.500"}
+                    placeholder="Select Quiz Passing Marks"
+                    type={"number"}
+                    value={passingMarks}
+                    onChange={(e) => setPassingMarks(e.target.value)}
+                  />
+              </FormControl>
+              <FormControl id="no of questions">
+                  <FormLabel>Number of Questions</FormLabel>
+                  <Input
+                    variant={"flushed"}
+                    color={"gray.500"}
+                    placeholder="Select number of questions"
+                    type={"number"}
+                    value={noOfQuestions}
+                    onChange={(e) => setNoOfQuestions(e.target.value)}
+                />
+                </FormControl>
 
               {/* <HStack
                 spacing={4}

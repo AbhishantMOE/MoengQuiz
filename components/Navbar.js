@@ -87,9 +87,7 @@ export default function Navbar() {
             />
           </HStack>
           <HStack spacing={3} display="flex" alignItems="center">
-            {!data?.user?.isAdmin && (
-              <div></div>
-            )}
+            {!data?.user?.isAdmin && <div></div>}
             <Menu>
               <MenuButton
                 as={Avatar}
@@ -99,6 +97,7 @@ export default function Navbar() {
                   .toLowerCase()
                   .replaceAll(" ", "")}.svg`}
               />
+              <p>{data?.user?.name}</p>
               <MenuList>
                 <MenuItem
                   icon={<RiUserHeartFill />}
@@ -159,14 +158,6 @@ export default function Navbar() {
                     onClick={() => router.replace("/create_quiz")}
                   >
                     Create Quiz
-                  </Tab>
-                  <Tab
-                    py={4}
-                    m={0}
-                    _focus={{ boxShadow: "none" }}
-                    onClick={() => router.replace("/create_pool")}
-                  >
-                    Create Pool
                   </Tab>
                   <Tab
                     py={4}

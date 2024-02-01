@@ -47,3 +47,4 @@ export default function QuizDetails() {
 QuizDetails.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
+

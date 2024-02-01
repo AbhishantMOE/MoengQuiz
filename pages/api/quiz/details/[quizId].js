@@ -31,6 +31,7 @@ async function getQuizDetails(req, res) {
       authorId: quiz.authorId,
       scheduledFor: quiz?.scheduledFor,
       endTime: quiz?.endTime,
+      questions: quiz?.questions,
       difficulty: quiz?.difficulty,
       questions: quiz?.questions,
     });

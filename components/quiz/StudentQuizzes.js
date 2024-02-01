@@ -50,6 +50,7 @@ const QuizItem = ({ quiz, user }) => {
     const [loading, setLoading] = useState(false);
     const [quizData, setQuizData ] = useState();
 
+    console.log(quiz._id, " ", user.id)
 
     const start = () => {
 
@@ -73,6 +74,7 @@ const QuizItem = ({ quiz, user }) => {
                         duration: 9000,
                         isClosable: true,
                     });
+                    launchFullScreen(document.documentElement);
                     router.push(
                         {
                             pathname: "/take_quiz",
@@ -87,6 +89,17 @@ const QuizItem = ({ quiz, user }) => {
                 setShowConfirmModal(false);
             });
     };
+    function launchFullScreen(element) {
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    }
     return (
         <Box mb={6}>
             <Flex alignItems={"center"} justifyContent={"space-between"}>

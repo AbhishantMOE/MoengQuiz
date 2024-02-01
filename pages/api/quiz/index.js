@@ -23,6 +23,7 @@ export default function handler(req, res) {
 //         return res.status(400).json({
 //             message: "An error was encountered",
 //         });
+
 //     }
 // }
 
@@ -39,6 +40,8 @@ async function createQuiz(req, res) {
       scheduledFor,
       endTime,
       questions,
+      passingMarks,
+      noOfQuestions,
     } = req.body;
 
     const newQuiz = new QuizSchema({
@@ -51,6 +54,8 @@ async function createQuiz(req, res) {
       scheduledFor: scheduledFor,
       endTime: endTime,
       questions: questions,
+      passingMarks: passingMarks,
+      noOfQuestions: noOfQuestions,
     });
 
     await newQuiz.save();
