@@ -40,7 +40,6 @@ export default function CreateQuiz() {
   const authorId = session.user.id;
 
   const clickSubmit = async () => {
-    console.log("inClickSubmitpool=====", poolData);
     setLoading(true);
     const poolData = {
       poolName,

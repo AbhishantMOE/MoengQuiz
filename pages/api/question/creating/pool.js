@@ -15,11 +15,10 @@ async function createPool(req, res) {
 
   const db = new MongoDbClient();
   await db.initClient();
-  //console.log(type);
 
   try {
     const quiz = await QuestionPoolSchema.updateOne(
-      { name: poolName, authorId: authorId },
+      { name: poolName },
 
       {
         visibility: true,

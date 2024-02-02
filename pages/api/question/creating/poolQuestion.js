@@ -23,6 +23,8 @@ async function createPoolQuestion(req, res) {
     quizId,
   } = req.body;
 
+  console.log("Requesting bodyyy", quizId);
+
   const db = new MongoDbClient();
   await db.initClient();
   //console.log(type);

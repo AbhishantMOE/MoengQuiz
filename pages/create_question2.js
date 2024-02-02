@@ -29,7 +29,7 @@ import { createPoolQuestion } from "../services/createPoolQuestion";
 import Layout from "../components/Layout";
 import Head from "next/head";
 import { Image } from "@chakra-ui/image";
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon } from "@chakra-ui/icons";
 import { v4 as uuidv4 } from "uuid";
 //const quizId = 3333;
 export default function CreateQuestion({ poolName, countInc, authorId }) {
@@ -53,24 +53,32 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
   const [options1, setOptions] = useState([""]);
   const [sentences, setSentences] = useState([""]);
   const [difficulty, setDifficulty] = useState("");
-    const [selectInputs, setSelectInputs] = useState([[]]);
+  const [selectInputs, setSelectInputs] = useState([[]]);
   const [selectAnswers, setSelectAnswers] = useState([]);
 
   const handleRemoveSelectInput = (selectIndex) => {
-    const newSelectInputs = selectInputs.filter((_, index) => index !== selectIndex);
-    const newSelectAnswers = selectAnswers.filter((_, index) => index !== selectIndex);
+    const newSelectInputs = selectInputs.filter(
+      (_, index) => index !== selectIndex
+    );
+    const newSelectAnswers = selectAnswers.filter(
+      (_, index) => index !== selectIndex
+    );
     setSelectInputs(newSelectInputs);
     setSelectAnswers(newSelectAnswers);
   };
 
   const handleRemoveOptionDropdown = (selectIndex, optionIndex) => {
     const newSelectInputs = [...selectInputs];
-    newSelectInputs[selectIndex] = newSelectInputs[selectIndex].filter((_, index) => index !== optionIndex);
+    newSelectInputs[selectIndex] = newSelectInputs[selectIndex].filter(
+      (_, index) => index !== optionIndex
+    );
     setSelectInputs(newSelectInputs);
 
-    if (selectAnswers[selectIndex] === newSelectInputs[selectIndex][optionIndex]) {
+    if (
+      selectAnswers[selectIndex] === newSelectInputs[selectIndex][optionIndex]
+    ) {
       const newSelectAnswers = [...selectAnswers];
-      newSelectAnswers[selectIndex] = '';
+      newSelectAnswers[selectIndex] = "";
       setSelectAnswers(newSelectAnswers);
     }
   };
@@ -85,9 +93,9 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     newSelectInputs[selectIndex].push("");
     setSelectInputs(newSelectInputs);
 
-    if(newSelectInputs[selectIndex].length === 1) {
+    if (newSelectInputs[selectIndex].length === 1) {
       const newSelectAnswers = [...selectAnswers];
-      newSelectAnswers[selectIndex] = '';
+      newSelectAnswers[selectIndex] = "";
       setSelectAnswers(newSelectAnswers);
     }
   };
@@ -97,7 +105,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     newSelectInputs[selectIndex][optionIndex] = event.target.value;
     setSelectInputs(newSelectInputs);
 
-    if(optionIndex === 0) {
+    if (optionIndex === 0) {
       const newSelectAnswers = [...selectAnswers];
       newSelectAnswers[selectIndex] = event.target.value;
       setSelectAnswers(newSelectAnswers);
@@ -107,7 +115,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
   const handleSelectAnswerChange = (selectIndex, event) => {
     const newSelectAnswers = [...selectAnswers];
     newSelectAnswers[selectIndex] = event.target.value;
-    
+
     setSelectAnswers(newSelectAnswers);
   };
 
@@ -172,7 +180,6 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     setCorrectAnswer("");
     setQuestionType("");
     setLoading(false);
-  
   };
   const handleRemoveOption = (index) => {
     const newOptions = options1.filter((option, opIndex) => opIndex !== index);
@@ -187,22 +194,25 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
       const formData = new FormData();
       formData.append("file", image);
       formData.append("upload_preset", "wc2ewopf");
-      const response = await fetch("https://api.cloudinary.com/v1_1/dnb0henp1/image/upload", {
-        method: "POST",
-        body: formData
-      })
-      const data = await response.json()
-      image_url = data.url
-    }
-
-    catch {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dnb0henp1/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      image_url = data.url;
+    } catch {
       console.log("Error");
     }
-  }
+  };
 
   const clickSubmit = async () => {
     setLoading(true);
     let questionData = {};
+    console.log("This is quizID", quizId);
+
     if (questionType === "mcq") {
       questionData = {
         poolName,
@@ -268,7 +278,13 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
       };
     }
     if (questionType === "reorder") {
-      questionData = { description, options: sentences,difficulty, poolName, type: 'Reorder' };
+      questionData = {
+        description,
+        options: sentences,
+        difficulty,
+        poolName,
+        type: "Reorder",
+      };
     }
     if (questionType === "fib") {
       questionData = {
@@ -279,9 +295,10 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
           correctAnswer: selectAnswers[index],
         })),
       };
-      console.log(questionData)
+      console.log(questionData);
     }
-
+    questionData.quizId = "3333";
+    console.log("quesData", questionData);
     createPoolQuestion(questionData)
       .then((data) => {
         console.log("Resetting it?");
@@ -400,7 +417,12 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                             onChange={(e) => handleOptionChange(index, e)}
                           />
                         </FormControl>
-                        <Button ml={2} onClick={() => handleRemoveOption(index)}>Delete</Button>
+                        <Button
+                          ml={2}
+                          onClick={() => handleRemoveOption(index)}
+                        >
+                          Delete
+                        </Button>
                       </Flex>
                     </GridItem>
                   ))}
@@ -443,21 +465,33 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                 </>
               )}
               {/* fill in the blanks */}
-                            {questionType === "fib" && (
+              {questionType === "fib" && (
                 <>
                   {selectInputs.map((selectInput, selectIndex) => (
                     <GridItem key={selectIndex} colSpan={[6, 3]}>
-                      <FormControl id={`dropdown${selectIndex + 1}`} justifyContent="space-between">
+                      <FormControl
+                        id={`dropdown${selectIndex + 1}`}
+                        justifyContent="space-between"
+                      >
                         <Flex justify="space-between" align="center">
-                          <FormLabel mr={2} color="black">Dropdown {selectIndex + 1}</FormLabel>
-                          <Button onClick={() => handleRemoveSelectInput(selectIndex)} size="sm">
+                          <FormLabel mr={2} color="black">
+                            Dropdown {selectIndex + 1}
+                          </FormLabel>
+                          <Button
+                            onClick={() => handleRemoveSelectInput(selectIndex)}
+                            size="sm"
+                          >
                             <DeleteIcon color="red" />
                           </Button>
                         </Flex>
                         <br />
 
                         {selectInput.map((option, optionIndex) => (
-                          <Flex key={optionIndex} mb={3} justifyContent="space-between">
+                          <Flex
+                            key={optionIndex}
+                            mb={3}
+                            justifyContent="space-between"
+                          >
                             <Input
                               flex="1 1 auto"
                               maxWidth="90%"
@@ -466,16 +500,31 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                               placeholder={`Option ${optionIndex + 1}`}
                               value={option}
                               onChange={(e) =>
-                                handleSelectInputChange(selectIndex, optionIndex, e)
+                                handleSelectInputChange(
+                                  selectIndex,
+                                  optionIndex,
+                                  e
+                                )
                               }
                             />
-                            <Button onClick={() => handleRemoveOptionDropdown(selectIndex, optionIndex)} size="sm">
+                            <Button
+                              onClick={() =>
+                                handleRemoveOptionDropdown(
+                                  selectIndex,
+                                  optionIndex
+                                )
+                              }
+                              size="sm"
+                            >
                               <DeleteIcon />
                             </Button>
                           </Flex>
                         ))}
 
-                        <Button onClick={() => addOptionToSelectInput(selectIndex)} size="sm">
+                        <Button
+                          onClick={() => addOptionToSelectInput(selectIndex)}
+                          size="sm"
+                        >
                           Add Option
                         </Button>
                       </FormControl>
@@ -484,14 +533,18 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                   <Button my={3} onClick={addSelectInput} width="200px">
                     Add Dropdown
                   </Button>
-                    <div></div>
+                  <div></div>
                   {selectInputs.map((selectInput, selectIndex) => (
                     <GridItem key={selectIndex} colSpan={[6, 3]}>
                       <FormControl id={`dropdownAnswer${selectIndex + 1}`}>
-                        <FormLabel>Correct Answer for Dropdown {selectIndex + 1}</FormLabel>
+                        <FormLabel>
+                          Correct Answer for Dropdown {selectIndex + 1}
+                        </FormLabel>
                         <Select
-                          value={selectAnswers[selectIndex] || ''}
-                          onChange={(e) => handleSelectAnswerChange(selectIndex, e)}
+                          value={selectAnswers[selectIndex] || ""}
+                          onChange={(e) =>
+                            handleSelectAnswerChange(selectIndex, e)
+                          }
                         >
                           {selectInput.map((option, optionIndex) => (
                             <option key={optionIndex} value={option}>
