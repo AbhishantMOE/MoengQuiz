@@ -111,14 +111,13 @@ export default function CreateQuiz() {
         endTime: endTime,
         questions: data.flat(),
         passingMarks: passingMarks,
-            noOfQuestions:noOfQuestions
       };
       const resetForm = () => {
-            setTitle("");
-            setDescription("");
-            setDuration(10);
-            setLoading(false);
-        };
+        setTitle("");
+        setDescription("");
+        setDuration(10);
+        setLoading(false);
+      };
       createQuiz(quiz)
         .then((data) => {
           if (data?.message) {
@@ -263,27 +262,16 @@ export default function CreateQuiz() {
                 />
               </FormControl>
               <FormControl id="passing marks">
-                  <FormLabel>Passing %</FormLabel>
-                  <Input
-                    variant={"flushed"}
-                    color={"gray.500"}
-                    placeholder="Select Quiz Passing Marks"
-                    type={"number"}
-                    value={passingMarks}
-                    onChange={(e) => setPassingMarks(e.target.value)}
-                  />
-              </FormControl>
-              <FormControl id="no of questions">
-                  <FormLabel>Number of Questions</FormLabel>
-                  <Input
-                    variant={"flushed"}
-                    color={"gray.500"}
-                    placeholder="Select number of questions"
-                    type={"number"}
-                    value={noOfQuestions}
-                    onChange={(e) => setNoOfQuestions(e.target.value)}
+                <FormLabel>Passing %</FormLabel>
+                <Input
+                  variant={"flushed"}
+                  color={"gray.500"}
+                  placeholder="Select Quiz Passing Marks"
+                  type={"number"}
+                  value={passingMarks}
+                  onChange={(e) => setPassingMarks(e.target.value)}
                 />
-                </FormControl>
+              </FormControl>
 
               {/* <HStack
                 spacing={4}

@@ -81,7 +81,9 @@ async function markQuiz(req, res) {
   try {
     const user = await UserSchema.findById(userId);
     const quiz = await QuizSchema.findById(quizId);
-    const questionsU = await Question.find({ quizId });
+    // const questionsU = await Question.find({ quizId });
+
+    const questionsU = await quiz.questions;
 
     const { questions } = req.body;
     let score = 0;
