@@ -150,12 +150,15 @@ async function markQuiz(req, res) {
         selected: userAnswer,
         questionId: item._id,
         quizId: quizId,
+        type: item.type,
         correctAnswer: item.correctAnswer,
         options: item.options,
         attemptId: newAttempt._id,
       });
 
       await newResponse.save();
+
+      console.log("Saved Succesfully respnse?");
 
       newAttempt.responses.push(newResponse._id);
     }
