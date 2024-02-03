@@ -388,6 +388,40 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                 />
               </FormControl>
               {/* Multi choice single correct */}
+              {questionType === "mcq" && (
+                <>
+                  {options1.map((option, index) => (
+                    <GridItem key={index} colSpan={[6, 3]}>
+                      <Flex alignItems="center" mb={4}>
+                        <Radio
+                          mr={2}
+                          isChecked={correctAnswer === option}
+                          value={option}
+                          onChange={(e) => setCorrectAnswer(e.target.value)}
+                        />
+                        <FormControl id={`option${index + 1}`}>
+                          <FormLabel ml={2}>Option {index + 1}</FormLabel>
+                          <Input
+                            variant={"flushed"}
+                            color={"gray.500"}
+                            placeholder={`Option ${index + 1}`}
+                            value={option}
+                            onChange={(e) => handleOptionChange(index, e)}
+                          />
+                        </FormControl>
+                        <Button
+                          ml={2}
+                          onClick={() => handleRemoveOption(index)}
+                        >
+                          Delete
+                        </Button>
+                      </Flex>
+                    </GridItem>
+                  ))}
+                  <Button onClick={handleAddOption}>Add Option</Button>
+                </>
+              )}
+              {/* Multi choice multi correct */}
               {questionType === "mcm" && (
                 <>
                   {options1.map((option, index) => (

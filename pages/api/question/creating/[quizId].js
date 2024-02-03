@@ -13,11 +13,19 @@ export default async function handler(req, res) {
 
 async function createQuestion(req, res) {
   const { quizId } = req.query;
-  const { description, options, correctAnswer,dropdowns,  type, imageUrl } = req.body;
+  const {
+    description,
+    options,
+    correctAnswer,
+    dropdowns,
+    type,
+    imageUrl,
+    difficulty,
+  } = req.body;
 
-  if (!quizId || quizId === 'undefined') {
+  if (!quizId || quizId === "undefined") {
     return res.status(400).json({
-      error: 'Error getting Quiz Id',
+      error: "Error getting Quiz Id",
     });
   }
 
@@ -28,81 +36,89 @@ async function createQuestion(req, res) {
     let newQuestion;
 
     switch (type) {
-      case 'MCQ':
+      case "MCQ":
         newQuestion = new Question({
           quizId,
           description,
           options,
           correctAnswer,
           type,
+          difficulty,
         });
         break;
 
-      case 'Reorder':
+      case "Reorder":
         newQuestion = new Question({
           quizId,
           description,
           options,
           type,
+          difficulty,
         });
         break;
 
-      case 'MCM':
+      case "MCM":
         newQuestion = new Question({
           quizId,
           description,
           options,
           correctAnswer,
           type,
+          difficulty,
         });
         break;
 
-      case 'True/False':
+      case "True/False":
         newQuestion = new Question({
           quizId,
           description,
-          options: ['True', 'False'],
+          options: ["True", "False"],
           correctAnswer,
           type,
+          difficulty,
         });
         break;
 
-      case 'Hotspot':
+      case "Hotspot":
         newQuestion = new Question({
           quizId,
           description,
           correctAnswer: correctAnswer,
           type,
           imageUrl,
+          difficulty,
         });
         break;
 
-      case 'Fill':
+      case "Fill":
         newQuestion = new Question({
           quizId,
           description,
           dropdowns,
           type,
+          difficulty,
         });
         break;
 
       default:
         return res.status(400).json({
-          error: 'Invalid question type',
+          error: "Invalid question type",
         });
     }
 
     await newQuestion.save();
-    const quiz = await QuizSchema.findOneAndUpdate({ _id: quizId }, { $push: { questions: newQuestion } });
-
+    const quiz = await QuizSchema.findOneAndUpdate(
+      { _id: quizId },
+      { $push: { questions: newQuestion } }
+    );
 
     return res.status(200).json({
-      message: 'Question added successfully',
+      message: "Question added successfully",
     });
   } catch (err) {
     console.log(err);
     return res.status(400).json({
-      error: 'An error was encountered',
+      error: "An error was encountered",
     });
   }
 }
@@ -120,7 +136,7 @@ async function getQuestions(req, res) {
   } catch (err) {
     console.log(err);
     return res.status(400).json({
-      error: "An error was encountered"
+      error: "An error was encountered",
     });
   }
 }

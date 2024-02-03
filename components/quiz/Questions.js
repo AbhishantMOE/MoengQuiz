@@ -143,9 +143,11 @@ const QuestionItem = ({
               />
               <Box flex="1" textAlign="left" fontFamily={"Poppins"}>
                 {question?.description}
-                <Tag ml={3} size="md" variant="solid" colorScheme="blue">
-                  {question?.poolName}
-                </Tag>
+                {question.poolName && (
+                  <Tag ml={3} size="md" variant="solid" colorScheme="blue">
+                    {question?.poolName}
+                  </Tag>
+                )}
               </Box>
               <HStack spacing={4}>
                 <Tag

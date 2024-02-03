@@ -1,51 +1,84 @@
 import { useState, useEffect } from "react";
 import {
-  Flex, Box, FormControl, FormLabel, Checkbox, Input, Stack, Button, Heading, Textarea, Alert,
-  AlertIcon, useColorModeValue, SimpleGrid, GridItem, Select, useToast, RadioGroup, Radio, HStack, Text
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Checkbox,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Textarea,
+  Alert,
+  AlertIcon,
+  useColorModeValue,
+  SimpleGrid,
+  GridItem,
+  Select,
+  useToast,
+  RadioGroup,
+  Radio,
+  HStack,
+  Text,
 } from "@chakra-ui/react";
 import { FiEdit3 } from "react-icons/fi";
 import { useRouter } from "next/router";
 import { createQuestion } from "../services/question";
-import Layout from "../components/Layout"
-import Head from 'next/head'
+import Layout from "../components/Layout";
+import Head from "next/head";
 import { Image } from "@chakra-ui/image";
-import { DeleteIcon } from '@chakra-ui/icons';
-import { v4 as uuidv4 } from 'uuid';
+import { DeleteIcon } from "@chakra-ui/icons";
+import { v4 as uuidv4 } from "uuid";
 
 export default function CreateQuestion() {
   const router = useRouter();
   const toast = useToast();
   const { quizId } = router.query;
-  const image_url = null
+  const image_url = null;
+  const [difficulty, setDifficulty] = useState("");
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState([]);
   const [loading, setLoading] = useState(false);
   const [questionType, setQuestionType] = useState("");
-  const [marker, setMarker] = useState({ top: null, left: null, width: null, height: null });
+  const [marker, setMarker] = useState({
+    top: null,
+    left: null,
+    width: null,
+    height: null,
+  });
   const [dragging, setDragging] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
-  const [options1, setOptions] = useState([""])
+  const [options1, setOptions] = useState([""]);
   const [sentences, setSentences] = useState([""]);
 
   const [selectInputs, setSelectInputs] = useState([[]]);
   const [selectAnswers, setSelectAnswers] = useState([]);
 
   const handleRemoveSelectInput = (selectIndex) => {
-    const newSelectInputs = selectInputs.filter((_, index) => index !== selectIndex);
-    const newSelectAnswers = selectAnswers.filter((_, index) => index !== selectIndex);
+    const newSelectInputs = selectInputs.filter(
+      (_, index) => index !== selectIndex
+    );
+    const newSelectAnswers = selectAnswers.filter(
+      (_, index) => index !== selectIndex
+    );
     setSelectInputs(newSelectInputs);
     setSelectAnswers(newSelectAnswers);
   };
 
   const handleRemoveOptionDropdown = (selectIndex, optionIndex) => {
     const newSelectInputs = [...selectInputs];
-    newSelectInputs[selectIndex] = newSelectInputs[selectIndex].filter((_, index) => index !== optionIndex);
+    newSelectInputs[selectIndex] = newSelectInputs[selectIndex].filter(
+      (_, index) => index !== optionIndex
+    );
     setSelectInputs(newSelectInputs);
 
-    if (selectAnswers[selectIndex] === newSelectInputs[selectIndex][optionIndex]) {
+    if (
+      selectAnswers[selectIndex] === newSelectInputs[selectIndex][optionIndex]
+    ) {
       const newSelectAnswers = [...selectAnswers];
-      newSelectAnswers[selectIndex] = '';
+      newSelectAnswers[selectIndex] = "";
       setSelectAnswers(newSelectAnswers);
     }
   };
@@ -60,9 +93,9 @@ export default function CreateQuestion() {
     newSelectInputs[selectIndex].push("");
     setSelectInputs(newSelectInputs);
 
-    if(newSelectInputs[selectIndex].length === 1) {
+    if (newSelectInputs[selectIndex].length === 1) {
       const newSelectAnswers = [...selectAnswers];
-      newSelectAnswers[selectIndex] = '';
+      newSelectAnswers[selectIndex] = "";
       setSelectAnswers(newSelectAnswers);
     }
   };
@@ -72,7 +105,7 @@ export default function CreateQuestion() {
     newSelectInputs[selectIndex][optionIndex] = event.target.value;
     setSelectInputs(newSelectInputs);
 
-    if(optionIndex === 0) {
+    if (optionIndex === 0) {
       const newSelectAnswers = [...selectAnswers];
       newSelectAnswers[selectIndex] = event.target.value;
       setSelectAnswers(newSelectAnswers);
@@ -82,7 +115,7 @@ export default function CreateQuestion() {
   const handleSelectAnswerChange = (selectIndex, event) => {
     const newSelectAnswers = [...selectAnswers];
     newSelectAnswers[selectIndex] = event.target.value;
-    
+
     setSelectAnswers(newSelectAnswers);
   };
 
@@ -104,7 +137,7 @@ export default function CreateQuestion() {
     const newOptions = [...options1];
     newOptions[index] = event.target.value;
 
-    if (index === 0 && correctAnswer === '') {
+    if (index === 0 && correctAnswer === "") {
       setCorrectAnswer(newOptions[0]);
     }
 
@@ -115,14 +148,13 @@ export default function CreateQuestion() {
     setImage(event.target.files[0]);
   };
 
-
   const startDraw = (event) => {
     const rect = event.target.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     setMarker({ top: y, left: x, width: 0, height: 0 });
     setDragging(true);
-  }
+  };
 
   const draw = (event) => {
     if (!dragging) {
@@ -132,16 +164,16 @@ export default function CreateQuestion() {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     setMarker({ ...marker, width: x - marker.left, height: y - marker.top });
-  }
+  };
 
   const endDraw = () => {
     setDragging(false);
     getBoxCoordinates();
-  }
+  };
 
   const getBoxCoordinates = () => {
-    return marker
-  }
+    return marker;
+  };
 
   const resetForm = () => {
     setDescription("");
@@ -163,49 +195,90 @@ export default function CreateQuestion() {
       const formData = new FormData();
       formData.append("file", image);
       formData.append("upload_preset", "wc2ewopf");
-      const response = await fetch("https://api.cloudinary.com/v1_1/dnb0henp1/image/upload", {
-        method: "POST",
-        body: formData
-      })
-      const data = await response.json()
-      image_url = data.url
-    }
-
-    catch {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dnb0henp1/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      image_url = data.url;
+    } catch {
       console.log("Error");
     }
-  }
+  };
 
   const clickSubmit = async () => {
     setLoading(true);
-    console.log(questionType)
+    console.log(questionType);
     let questionData = {};
     if (questionType === "mcq") {
-      questionData = { description, options: options1, correctAnswer, type: 'MCQ' };
+      questionData = {
+        description,
+        options: options1,
+        correctAnswer,
+        difficulty,
+        type: "MCQ",
+      };
     }
     if (questionType === "mcm") {
-      questionData = { description, options: options1, correctAnswer, type: 'MCM' };
+      questionData = {
+        description,
+        options: options1,
+        correctAnswer,
+        difficulty,
+        type: "MCM",
+      };
     }
     if (questionType === "mtf") {
-      questionData = { description, matches: pairs, type: 'Match the following' };
+      questionData = {
+        description,
+        matches: pairs,
+        difficulty,
+        type: "Match the following",
+      };
     }
     if (questionType === "tf") {
-      options1 = ['True', 'False'];
-      questionData = { description, options: options1, correctAnswer, type: 'True/False' };
+      options1 = ["True", "False"];
+      questionData = {
+        description,
+        options: options1,
+        correctAnswer,
+        difficulty,
+        type: "True/False",
+      };
     }
     if (questionType === "hotspot") {
-      await uploadImage()
+      await uploadImage();
       if (image) {
         if (image_url == null) {
-          toast({ title: "Error", description: "Image upload failed", status: "error", duration: 9000, isClosable: true });
+          toast({
+            title: "Error",
+            description: "Image upload failed",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
           return;
         }
       }
       const ans = getBoxCoordinates();
-      questionData = { description, correctAnswer: ans, type: 'Hotspot', imageUrl: image_url };
+      questionData = {
+        description,
+        correctAnswer: ans,
+        type: "Hotspot",
+        difficulty,
+        imageUrl: image_url,
+      };
     }
     if (questionType === "reorder") {
-      questionData = { description, options: sentences, type: 'Reorder' };
+      questionData = {
+        description,
+        options: sentences,
+        difficulty,
+        type: "Reorder",
+      };
     }
     if (questionType === "fib") {
       questionData = {
@@ -216,18 +289,32 @@ export default function CreateQuestion() {
           correctAnswer: selectAnswers[index],
         })),
       };
-      console.log(questionData)
+      console.log(questionData);
     }
 
-    createQuestion(quizId, questionData).then((data) => {
-      if (data?.message) {
-        resetForm();
-        toast({ title: "Success", description: data?.message, status: "success", duration: 9000, isClosable: true });
-        router.push({ pathname: "/quiz_detail", query: { quizId: quizId } });
-      } else {
-        toast({ title: "Error", description: data?.error, status: "error", duration: 9000, isClosable: true });
-      }
-    }).finally(() => setLoading(false));
+    createQuestion(quizId, questionData)
+      .then((data) => {
+        if (data?.message) {
+          resetForm();
+          toast({
+            title: "Success",
+            description: data?.message,
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+          router.push({ pathname: "/quiz_detail", query: { quizId: quizId } });
+        } else {
+          toast({
+            title: "Error",
+            description: data?.error,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -269,6 +356,16 @@ export default function CreateQuestion() {
                   <option value="hotspot">Hotspot</option>
                 </Select>
               </FormControl>
+              <RadioGroup
+                onChange={(val) => setDifficulty(val)}
+                value={difficulty}
+              >
+                <Stack direction="row">
+                  <Radio value="easy">Easy</Radio>
+                  <Radio value="medium">Medium</Radio>
+                  <Radio value="hard">Hard</Radio>
+                </Stack>
+              </RadioGroup>
               <FormControl id="description" as={GridItem} colSpan={6}>
                 <FormLabel>Question</FormLabel>
                 <Textarea
@@ -278,6 +375,40 @@ export default function CreateQuestion() {
                 />
               </FormControl>
               {/* Multi choice single correct */}
+              {questionType === "mcq" && (
+                <>
+                  {options1.map((option, index) => (
+                    <GridItem key={index} colSpan={[6, 3]}>
+                      <Flex alignItems="center" mb={4}>
+                        <Radio
+                          mr={2}
+                          isChecked={correctAnswer === option}
+                          value={option}
+                          onChange={(e) => setCorrectAnswer(e.target.value)}
+                        />
+                        <FormControl id={`option${index + 1}`}>
+                          <FormLabel ml={2}>Option {index + 1}</FormLabel>
+                          <Input
+                            variant={"flushed"}
+                            color={"gray.500"}
+                            placeholder={`Option ${index + 1}`}
+                            value={option}
+                            onChange={(e) => handleOptionChange(index, e)}
+                          />
+                        </FormControl>
+                        <Button
+                          ml={2}
+                          onClick={() => handleRemoveOption(index)}
+                        >
+                          Delete
+                        </Button>
+                      </Flex>
+                    </GridItem>
+                  ))}
+                  <Button onClick={handleAddOption}>Add Option</Button>
+                </>
+              )}
+              {/* Multi choice multi correct */}
               {questionType === "mcm" && (
                 <>
                   {options1.map((option, index) => (
@@ -292,8 +423,8 @@ export default function CreateQuestion() {
                               e.target.checked
                                 ? [...correctAnswer, e.target.value]
                                 : correctAnswer.filter(
-                                  (ca) => ca !== e.target.value
-                                )
+                                    (ca) => ca !== e.target.value
+                                  )
                             )
                           }
                         />
@@ -307,7 +438,12 @@ export default function CreateQuestion() {
                             onChange={(e) => handleOptionChange(index, e)}
                           />
                         </FormControl>
-                        <Button ml={2} onClick={() => handleRemoveOption(index)}>Delete</Button>
+                        <Button
+                          ml={2}
+                          onClick={() => handleRemoveOption(index)}
+                        >
+                          Delete
+                        </Button>
                       </Flex>
                     </GridItem>
                   ))}
@@ -354,17 +490,29 @@ export default function CreateQuestion() {
                 <>
                   {selectInputs.map((selectInput, selectIndex) => (
                     <GridItem key={selectIndex} colSpan={[6, 3]}>
-                      <FormControl id={`dropdown${selectIndex + 1}`} justifyContent="space-between">
+                      <FormControl
+                        id={`dropdown${selectIndex + 1}`}
+                        justifyContent="space-between"
+                      >
                         <Flex justify="space-between" align="center">
-                          <FormLabel mr={2} color="black">Dropdown {selectIndex + 1}</FormLabel>
-                          <Button onClick={() => handleRemoveSelectInput(selectIndex)} size="sm">
+                          <FormLabel mr={2} color="black">
+                            Dropdown {selectIndex + 1}
+                          </FormLabel>
+                          <Button
+                            onClick={() => handleRemoveSelectInput(selectIndex)}
+                            size="sm"
+                          >
                             <DeleteIcon color="red" />
                           </Button>
                         </Flex>
                         <br />
 
                         {selectInput.map((option, optionIndex) => (
-                          <Flex key={optionIndex} mb={3} justifyContent="space-between">
+                          <Flex
+                            key={optionIndex}
+                            mb={3}
+                            justifyContent="space-between"
+                          >
                             <Input
                               flex="1 1 auto"
                               maxWidth="90%"
@@ -373,16 +521,31 @@ export default function CreateQuestion() {
                               placeholder={`Option ${optionIndex + 1}`}
                               value={option}
                               onChange={(e) =>
-                                handleSelectInputChange(selectIndex, optionIndex, e)
+                                handleSelectInputChange(
+                                  selectIndex,
+                                  optionIndex,
+                                  e
+                                )
                               }
                             />
-                            <Button onClick={() => handleRemoveOptionDropdown(selectIndex, optionIndex)} size="sm">
+                            <Button
+                              onClick={() =>
+                                handleRemoveOptionDropdown(
+                                  selectIndex,
+                                  optionIndex
+                                )
+                              }
+                              size="sm"
+                            >
                               <DeleteIcon />
                             </Button>
                           </Flex>
                         ))}
 
-                        <Button onClick={() => addOptionToSelectInput(selectIndex)} size="sm">
+                        <Button
+                          onClick={() => addOptionToSelectInput(selectIndex)}
+                          size="sm"
+                        >
                           Add Option
                         </Button>
                       </FormControl>
@@ -391,14 +554,18 @@ export default function CreateQuestion() {
                   <Button my={3} onClick={addSelectInput} width="200px">
                     Add Dropdown
                   </Button>
-                    <div></div>
+                  <div></div>
                   {selectInputs.map((selectInput, selectIndex) => (
                     <GridItem key={selectIndex} colSpan={[6, 3]}>
                       <FormControl id={`dropdownAnswer${selectIndex + 1}`}>
-                        <FormLabel>Correct Answer for Dropdown {selectIndex + 1}</FormLabel>
+                        <FormLabel>
+                          Correct Answer for Dropdown {selectIndex + 1}
+                        </FormLabel>
                         <Select
-                          value={selectAnswers[selectIndex] || ''}
-                          onChange={(e) => handleSelectAnswerChange(selectIndex, e)}
+                          value={selectAnswers[selectIndex] || ""}
+                          onChange={(e) =>
+                            handleSelectAnswerChange(selectIndex, e)
+                          }
                         >
                           {selectInput.map((option, optionIndex) => (
                             <option key={optionIndex} value={option}>
@@ -424,10 +591,8 @@ export default function CreateQuestion() {
                         Uploaded Image:
                       </p>
 
-
                       {image ? (
                         <>
-
                           <Image
                             boxSize="200px"
                             src={
@@ -492,7 +657,5 @@ export default function CreateQuestion() {
 }
 
 CreateQuestion.getLayout = function getLayout(page) {
-  return (
-    <Layout>{page}</Layout>
-  )
-}
+  return <Layout>{page}</Layout>;
+};
