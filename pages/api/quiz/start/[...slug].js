@@ -85,6 +85,8 @@ async function markQuiz(req, res) {
 
     const questionsU = await quiz.questions;
 
+    console.log("=+++>", questionsU);
+
     const { questions } = req.body;
     let score = 0;
 
