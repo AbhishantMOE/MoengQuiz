@@ -66,12 +66,11 @@ function PoolQModal({ isOpen, onOpen, onClose, setPoolPref }) {
               }
             >
               {list?.map((item, index) => (
-                <option value={item.name}>{item.name}</option>
+                <option key={index} value={item.name}>{item.name}</option>
               ))}
             </Select>
             {pool && (
               <Flex justify={"center"} padding={5}>
-                {/* newwwwwww */}
                 <TableContainer>
                   <Table variant="simple">
                     <TableCaption>

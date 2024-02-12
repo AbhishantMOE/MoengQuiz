@@ -232,6 +232,7 @@ const QuestionItem = ({
                 <Image
                   src={question?.imageUrl}
                   style={{ width: "750px", height: "500px" }}
+                  alt="Image"
                 />
                 <div
                   style={{

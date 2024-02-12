@@ -8,15 +8,14 @@ import {
 } from "@chakra-ui/react";
 
 export const PoolListAccordian = ({ list }) => {
-  // console.log("his is list", list);
   return (
     <Accordion allowMultiple>
-      {list.map((item) => {
+      {list.map((item, index) => {
         return (
-          <AccordionItem>
+          <AccordionItem key={index}>
             <h2>
               <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
+                <Box flex="1" textAlign="left">
                   {item.name}
                 </Box>
                 <AccordionIcon />
