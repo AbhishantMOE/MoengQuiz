@@ -55,7 +55,7 @@ const UserItem = ({ user, isLoggedInUserAdmin, quizId }) => {
     return (
         <Box mb={6}>
             {quizTaken && quizTaken.attempts.map((attempt, idx) => (
-            <Flex alignItems={"center"} justifyContent={"space-between"}>
+            <Flex key={idx} alignItems={"center"} justifyContent={"space-between"}>
                 <Flex alignItems={"center"}>
                     <Flex
                         alignItems={"flex-start"}
