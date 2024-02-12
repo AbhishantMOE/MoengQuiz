@@ -338,7 +338,7 @@ export default function CreateQuestion() {
             boxShadow={"lg"}
             p={8}
           >
-            <SimpleGrid spacing={6} columns={6} mb={8}>
+            <SimpleGrid spacing={6} columns={6} marginBottom={8}>
               <FormControl id="questionType" as={GridItem} colSpan={6}>
                 <FormLabel>Question Type</FormLabel>
                 <Select
@@ -379,7 +379,7 @@ export default function CreateQuestion() {
                 <>
                   {options1.map((option, index) => (
                     <GridItem key={index} colSpan={[6, 3]}>
-                      <Flex alignItems="center" mb={4}>
+                      <Flex alignItems="center" marginBottom={4}>
                         <Radio
                           mr={2}
                           isChecked={correctAnswer === option}
@@ -413,7 +413,7 @@ export default function CreateQuestion() {
                 <>
                   {options1.map((option, index) => (
                     <GridItem key={index} colSpan={[6, 3]}>
-                      <Flex alignItems="center" mb={4}>
+                      <Flex alignItems="center" marginBottom={4}>
                         <Checkbox
                           mr={2}
                           isChecked={correctAnswer.includes(option)}
@@ -510,7 +510,7 @@ export default function CreateQuestion() {
                         {selectInput.map((option, optionIndex) => (
                           <Flex
                             key={optionIndex}
-                            mb={3}
+                            marginBottom={3}
                             justifyContent="space-between"
                           >
                             <Input
@@ -582,12 +582,12 @@ export default function CreateQuestion() {
               {questionType === "hotspot" && (
                 <>
                   <FormControl id="questionImage" as={GridItem} colSpan={6}>
-                    <FormLabel fontSize="lg" mb={2}>
+                    <FormLabel fontSize="lg" marginBottom={2}>
                       Upload Image
                     </FormLabel>
                     <Input type="file" onChange={handleFileChange} />
                     <Box position={"relative"} mt={4}>
-                      <p mb={2} fontSize="sm" color="gray.500">
+                      <p marginBottom={2} fontSize="sm" color="gray.500">
                         Uploaded Image:
                       </p>
 
