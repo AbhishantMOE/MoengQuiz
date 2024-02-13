@@ -37,13 +37,13 @@ export default function CreateQuiz() {
   const [count, setCount] = useState(0);
 
   const { data: session } = useSession();
-  const authorId = session.user.id;
+  const authorId = session?.user?.id;
 
   const clickSubmit = async () => {
     setLoading(true);
     const poolData = {
       poolName,
-      authorId: session.user.id,
+      authorId: session?.user?.id,
     };
 
     console.log("inClickSubmit=====", poolData);
