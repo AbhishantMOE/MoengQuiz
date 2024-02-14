@@ -41,7 +41,7 @@ export default function Navbar() {
   const logout = async () => {
     const result = await signOut({
       redirect: false,
-      callbackUrl: "/login",
+      callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
     });
     router.push(result.url);
   };

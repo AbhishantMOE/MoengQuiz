@@ -16,7 +16,6 @@ import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {
@@ -28,7 +27,7 @@ const ResponsiveAppBar = () => {
     const logout = async () => {
         const result = await signOut({
             redirect: false,
-            callbackUrl: "/login",
+            callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
         });
         router.push(result.url);
     };
