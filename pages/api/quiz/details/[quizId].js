@@ -29,6 +29,7 @@ async function getQuizDetails(req, res) {
       duration: quiz.duration,
       description: quiz.description,
       authorId: quiz.authorId,
+      usersEnrolled:quiz.usersEnrolled,
       scheduledFor: quiz?.scheduledFor,
       endTime: quiz?.endTime,
       difficulty: quiz?.difficulty,

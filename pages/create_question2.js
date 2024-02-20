@@ -110,7 +110,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     setCorrectAnswer("");
     setQuestionType("");
     setLoading(false);
-    setQuestionType("");
+    setDifficulty("")
     console.log("Doneeee");
   };
 
@@ -134,7 +134,23 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
   };
 
   const clickSubmit = async () => {
+
     setLoading(true);
+
+    if(difficulty == "" || description=="" || correctAnswer==""|| questionType==""
+        ){
+      toast({
+        title: "Error",
+        description: "Please select required fields before proceeding",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      setLoading(false);
+      return;
+    }
+    
+    
     let questionData = {};
     if (questionType === "mcq") {
       questionData = {

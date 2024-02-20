@@ -35,6 +35,7 @@ const Questions = ({ quiz }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [questions, setQuestions] = useState(quiz?.questions);
+  console.log("These are quiz questions",questions);
 
   useEffect(() => {
     setQuestions(quiz?.questions);
@@ -44,8 +45,17 @@ const Questions = ({ quiz }) => {
   }, [quiz?.questions]);
 
   const handleDelete = async (questionId) => {
-    await axios.delete(`/api/question/updating/${questionId}`);
-    setQuestions(questions.filter((question) => question._id !== questionId));
+    console.log("This is q id", questionId);
+    console.log("This is quiz obj", quiz);
+
+    const data = {
+      quizId : quiz.id,
+      questionId
+    }
+    await axios.delete(`/api/question/updating/questiondelupdate`,{data});
+    const arr = questions.filter((question) => question._id != questionId)
+    console.log("This is the new question array ====>", arr);
+    setQuestions(arr);
   };
 
   const handleUpdate = async (updatedQuestion) => {
