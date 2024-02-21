@@ -180,6 +180,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     setCorrectAnswer("");
     setQuestionType("");
     setLoading(false);
+    setDifficulty("")
   };
   const handleRemoveOption = (index) => {
     const newOptions = options1.filter((option, opIndex) => opIndex !== index);
@@ -187,6 +188,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     if (correctAnswer.includes(newOptions[index])) {
       setCorrectAnswer(correctAnswer.filter((cA) => cA !== newOptions[index]));
     }
+
   };
 
   const uploadImage = async () => {
@@ -209,7 +211,23 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
   };
 
   const clickSubmit = async () => {
+
     setLoading(true);
+
+    if(difficulty == "" || description=="" || correctAnswer==""|| questionType==""
+        ){
+      toast({
+        title: "Error",
+        description: "Please select required fields before proceeding",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      setLoading(false);
+      return;
+    }
+    
+    
     let questionData = {};
     console.log("This is quizID", quizId);
 

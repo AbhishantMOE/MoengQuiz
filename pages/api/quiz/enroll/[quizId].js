@@ -13,6 +13,8 @@ async function updateAssignedUsers(req, res) {
     const { quizId } = req.query;
     const {usersEnrolled} = req.body
     const db = new MongoDbClient();
+
+    //console.log("Iam in asssigned userss", quizId, usersEnrolled);
     await db.initClient();
 
     try {
@@ -20,11 +22,13 @@ async function updateAssignedUsers(req, res) {
         let users = await UserSchema.find({_id: {$in: usersEnrolled}});
         quiz.usersEnrolled = []
         for(let i=0; i<users.length; i++){
-            quiz.usersEnrolled.push(users[i]._id); 
-            users[i].quizzesEnrolled.push(quizId);
-            await users[i].save();
+            if (!users[i].quizzesEnrolled.includes(quizId)) {
+                quiz.usersEnrolled.push(users[i]._id);
+                users[i].quizzesEnrolled.push(quizId);
+                await users[i].save();
+              }
         }
-        
+
         await quiz.save()
         return res.status(200).json({
             message: 'User enrolled successfully'

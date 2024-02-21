@@ -5,6 +5,7 @@ constructor(){
 this.client = mongoose;
 }
 async initClient() {
+    
     await this.client.connect(process.env.MONGODB_URL, {
     });
     return this.client;

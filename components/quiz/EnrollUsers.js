@@ -22,8 +22,21 @@ const fetcher = (url) => axios.get(url).then((resp) => resp.data);
 export default function EnrollUsers({ quiz, isOpen, onClose }) {
     const { data: users } = useSWR("/api/user", fetcher);
     const quizId = quiz?.id
+    // console.log("The quizzzzz", quiz);
+    // console.log("These are the userses", users);
+    const[alreadyEnrolled,setAlreadyEnrolled] = useState([])
+    if(quiz !== undefined &&  quiz.usersEnrolled.length != 0 && alreadyEnrolled.length == 0) {
+        //console.log("Iam no undefined", quiz);
+        setAlreadyEnrolled([...quiz.usersEnrolled])
+    }
+    //console.log("alreday", alreadyEnrolled);
 
     const [selectedUsers, setSelectedUsers] = useState([]);
+
+    if(quiz!= undefined  && quiz.usersEnrolled.length != 0 && selectedUsers.length == 0) {
+        //console.log("Iam no undefined", quiz);
+        setSelectedUsers([...quiz.usersEnrolled])
+    }
 
     const onUserSelect = (user, isChecked) => {
         if (isChecked) {
@@ -57,8 +70,9 @@ export default function EnrollUsers({ quiz, isOpen, onClose }) {
                         <Heading py={5}>Enroll Users</Heading>
                         <Card>
                             {
+                                
                                 users?.map((user) =>
-                                    user?.isAdmin ? null : <User key={user?._id} user={user} onUserSelect={onUserSelect} />
+                                    user?.isAdmin ? null : <User key={user?._id} user={user} onUserSelect={onUserSelect} isChecked={alreadyEnrolled.includes(user._id)} />
                                 )
                             }
                         </Card>
