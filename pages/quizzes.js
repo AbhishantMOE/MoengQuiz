@@ -35,7 +35,7 @@ export default function Quizes () {
         <Box px={8}>
             <Heading py={5}>Public Quizzes</Heading>
             <Head>
-                <title>Quiz Platform | Public Quizzes</title>
+                <title>SE Assessment | Public Quizzes</title>
             </Head>
             <Card>
                 {quizzes?.length === 0 ? (

@@ -371,7 +371,7 @@ export default function Quiz() {
   return (
     <Box fontFamily={"Poppins"}>
       <Head>
-        <title>Quiz Platform | Take Quiz</title>
+        <title>SE Assessment | Take Quiz</title>
       </Head>
       <Flex
         justify={"center"}

@@ -229,7 +229,6 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     
     
     let questionData = {};
-    console.log("This is quizID", quizId);
 
     if (questionType === "mcq") {
       questionData = {
@@ -313,10 +312,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
           correctAnswer: selectAnswers[index],
         })),
       };
-      console.log(questionData);
     }
-    questionData.quizId = "3333";
-    console.log("quesData", questionData);
     createPoolQuestion(questionData)
       .then((data) => {
         console.log("Resetting it?");
@@ -347,7 +343,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
   return (
     <Box>
       <Head>
-        <title>Quiz Platform | Create Question</title>
+        <title>SE Assessment | Create Question</title>
       </Head>
       <Flex
         justify={"center"}

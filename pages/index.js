@@ -24,7 +24,7 @@ export default function Home() {
       justifyContent="center"
     >
       <Head>
-        <title>Quiz Platform | Home</title>
+        <title>SE Assessment | Home</title>
       </Head>
       <SimpleGrid
         columns={{ base: 1, md: 1 }} // Set to 1 column for all sizes

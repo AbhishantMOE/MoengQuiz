@@ -39,7 +39,7 @@ export default function Profile(){
     return (
         <Box px={8} style={{ fontFamily: "Poppins" }}>
             <Head>
-                <title>Quiz Platform | My Profile</title>
+                <title>SE Assessment | My Profile</title>
             </Head>
             <Heading py={5}>Profile</Heading>
             <Box py={2} mx="auto">

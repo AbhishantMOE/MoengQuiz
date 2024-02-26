@@ -24,7 +24,7 @@ export default function UserProfile () {
     return (
         <Box px={8} style={{ fontFamily: "Poppins" }}>
         <Head>
-                <title>Quiz Platform | User Profile</title>
+                <title>SE Assessment | User Profile</title>
             </Head>
             <Heading py={5}>Profile</Heading>
             <Box py={2} mx="auto">

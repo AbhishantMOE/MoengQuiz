@@ -19,8 +19,8 @@ import ConfirmDialog from "../common/ConfirmDialog";
 const AuthorQuizzes = ({ quizzes }) => {
     const [quizzesState, setQuizzesState] = useState(quizzes);
     useEffect(() => {
-            setQuizzesState(quizzes);
-      }, quizzes);
+        setQuizzesState(quizzes);
+    }, quizzes);
     return (
         <Box px={8}>
             <Heading py={5}>My Quizzes</Heading>
@@ -30,7 +30,7 @@ const AuthorQuizzes = ({ quizzes }) => {
                 ) : (
                     <>
                         {quizzesState?.map((quiz) => (
-                            <QuizItem key={quiz?._id} quiz={quiz} setQuizzesState={setQuizzesState}  />
+                            <QuizItem key={quiz?._id} quiz={quiz} setQuizzesState={setQuizzesState} />
                         ))}
                     </>
                 )}
@@ -83,6 +83,8 @@ const QuizItem = ({ quiz, setQuizzesState }) => {
                     {/* To add a push state */}
                     <Text
                         fontSize={"3xl"}
+                        maxWidth={"250px"}  
+                        whiteSpace={"normal"} // enable text wrap
                         _hover={{
                             borderBottom: "2px solid #4299E1",
                         }}

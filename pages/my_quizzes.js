@@ -22,7 +22,7 @@ export default function MyQuizzes() {
     return (
         <>
             <Head>
-                <title>Quiz Platform | My Quizzes</title>
+                <title>SE Assessment | My Quizzes</title>
             </Head>
             {session?.user?.isAdmin ? (
                 <AuthorQuizzes quizzes={quizzes} />

@@ -119,7 +119,7 @@ export default function Register() {
       fontFamily={"Poppins"}
     >
       <Head>
-        <title>Quiz Platform | Register</title>
+        <title>SE Assessment | Register</title>
       </Head>
       <Stack spacing={8} mx={"auto"} w={"600px"}>
         <Stack align={"center"}>

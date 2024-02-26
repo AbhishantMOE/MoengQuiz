@@ -86,7 +86,7 @@ export default function Login() {
       fontFamily={"Poppins"}
     >
       <Head>
-        <title>Quiz Platform | Login</title>
+        <title>SE Assessment | Login</title>
       </Head>
       <Stack spacing={8} mx={"auto"} w={"450px"}>
         <Stack align={"center"}>

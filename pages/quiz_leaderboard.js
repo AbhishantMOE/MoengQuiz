@@ -32,7 +32,7 @@ export default function QuizLeaderBoard() {
     return (
         <Box px={8} style={{ fontFamily: "Poppins" }}>
             <Head>
-                <title>Quiz Platform | Leaderboard</title>
+                <title>SE Assessment | Leaderboard</title>
             </Head>
             <Heading py={5}>{quiz?.title}</Heading>
             <Card>

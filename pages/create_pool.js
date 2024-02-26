@@ -76,7 +76,7 @@ export default function CreateQuiz() {
   return (
     <Box>
       <Head>
-        <title>Quiz Platform | Create Quiz</title>
+        <title>SE Assessment | Create Quiz</title>
       </Head>
       <Flex
         justify={"center"}

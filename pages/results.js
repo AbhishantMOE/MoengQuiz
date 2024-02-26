@@ -96,10 +96,11 @@ export default function Results() {
   const quizTaken = userDetails?.quizzesTaken?.find(
     (item) => item._id === quizTakenId
   );
+
   return (
     <Box px={8} style={{ fontFamily: "Poppins" }}>
       <Head>
-        <title>Quiz Platform | Results</title>
+        <title>SE Assessment | Results</title>
       </Head>
       <Heading py={5}>Results</Heading>
       {loading ? (
@@ -112,20 +113,21 @@ export default function Results() {
                 <Text fontSize={"xl"}>{quizTaken?.quizTitle}</Text>
               </Flex>
               <Text fontSize={"md"}>
-                You scored {attemptInfo?.score} /{" "}
-                {attemptInfo?.responses?.length}
+                You scored {attemptInfo?.score / attemptInfo?.responses?.length * 100}% 
               </Text>
             </Flex>
           </Card>
           <Box mb={4} />
-          <Card>
-            <Heading py={5}>Responses</Heading>
-            <Accordion allowToggle>
-              {attemptInfo?.responses?.map((resp, i) => (
-                <QuestionItem key={i} response={resp} />
-              ))}
-            </Accordion>
-          </Card>
+            {userDetails?.isAdmin && (
+              <Card>
+                <Heading py={5}>Responses</Heading>
+                <Accordion allowToggle>
+                  {attemptInfo.responses.map((resp, i) => (
+                    <QuestionItem key={i} response={resp} />
+                  ))}
+                </Accordion>
+              </Card>
+            )}
         </>
       )}
     </Box>
@@ -133,7 +135,6 @@ export default function Results() {
 }
 
 const QuestionItem = ({ response }) => {
-  console.log("Recieving correctyly the resp", response);
 
   const renderAnswerChoices = () => {
     if (["MCQ", "MCM", "True/False"].includes(response.type)) {
