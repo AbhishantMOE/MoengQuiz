@@ -49,13 +49,13 @@ export default function Profile(){
                     gap={{ base: 0, lg: 16 }}
                     // mx="auto"
                 >
-                    <GridItem colSpan={{ base: "auto", md: 4 }}>
+                    {/* <GridItem colSpan={{ base: "auto", md: 4 }}>
                         <Card>
                             <Flex alignItems={"center"}>
                                 <Heading>{data?.user?.name}</Heading>
                             </Flex>
                         </Card>
-                    </GridItem>
+                    </GridItem> */}
                     <GridItem colSpan={{ base: "auto", lg: 7 }}>
                         <Card>
                             <SimpleGrid

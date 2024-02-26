@@ -43,6 +43,41 @@ export default function Register() {
   const handleShowPass = () => setShowPass(!showPass);
 
   const clickSubmit = async () => {
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (password.length < 8) {
+      toast({
+        title: "Error",
+        description: "Password should be at least 8 characters",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    let re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+    if (!re.test(password)) {
+      toast({
+        title: "Error",
+        description: "Password should contain at least one number, one lowercase and one uppercase letter",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
     let userInfo = {
       name: name,
       email: email,

@@ -200,7 +200,7 @@ export default function CreateQuiz() {
                 <Input
                   variant={"flushed"}
                   color={"gray.500"}
-                  placeholder={"React Native"}
+                  placeholder={"Title"}
                   value={title}
                   onChange={(e) => {
                     setTitle(e.target.value);
@@ -221,8 +221,9 @@ export default function CreateQuiz() {
                 <Slider
                   aria-label="duration"
                   defaultValue={duration}
-                  min={0}
+                  min={10}
                   max={120}
+                  step={10}
                   onChange={(val) => setDuration(val)}
                 >
                   <SliderMark value={duration} mt="3" ml="-2.5" fontSize="sm">

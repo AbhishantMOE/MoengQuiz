@@ -46,8 +46,6 @@ export default function CreateQuiz() {
       authorId: session?.user?.id,
     };
 
-    console.log("inClickSubmit=====", poolData);
-
     createPool(poolData)
       .then((data) => {
         console.log("Errororo", data);
@@ -138,10 +136,6 @@ export default function CreateQuiz() {
                   Create Pool
                 </Button>
               </Stack>
-              <Alert status="info">
-                <AlertIcon />
-                Note That after creating the quiz you add questions
-              </Alert>
             </Stack>
           </Box>
         </Stack>
