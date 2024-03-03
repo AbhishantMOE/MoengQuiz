@@ -21,6 +21,7 @@ async function createPoolQuestion(req, res) {
     imageUrl,
     difficulty,
     quizId,
+    dropdowns,
   } = req.body;
 
   console.log("Requesting bodyyy", quizId);
@@ -89,6 +90,18 @@ async function createPoolQuestion(req, res) {
           difficulty,
           type,
           imageUrl,
+        });
+        break;
+
+      case "Fill":
+        newQuestion = new Question({
+          quizId,
+          poolName,
+          description,
+          dropdowns,
+          correctAnswer: correctAnswer,
+          type,
+          difficulty,
         });
         break;
 

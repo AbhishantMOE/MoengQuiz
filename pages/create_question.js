@@ -284,6 +284,7 @@ export default function CreateQuestion() {
       questionData = {
         description,
         type: "Fill",
+        difficulty,
         dropdowns: selectInputs.map((options, index) => ({
           options,
           correctAnswer: selectAnswers[index],

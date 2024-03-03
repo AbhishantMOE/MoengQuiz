@@ -181,6 +181,9 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     setQuestionType("");
     setLoading(false);
     setDifficulty("");
+    setSelectAnswers([]);
+    setSelectInputs([[]]);
+    setOptions([""]);
   };
   const handleRemoveOption = (index) => {
     const newOptions = options1.filter((option, opIndex) => opIndex !== index);
@@ -212,12 +215,15 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
   const clickSubmit = async () => {
     setLoading(true);
 
-    if (
-      difficulty == "" ||
-      description == "" ||
-      correctAnswer == "" ||
-      questionType == ""
-    ) {
+    console.log(
+      "These are",
+      difficulty,
+      description,
+      correctAnswer,
+      questionType
+    );
+
+    if (difficulty == "" || description == "" || questionType == "") {
       toast({
         title: "Error",
         description: "Please select required fields before proceeding",
@@ -227,6 +233,32 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
       });
       setLoading(false);
       return;
+    }
+
+    if (questionType == "fib") {
+      if (selectAnswers == [] || selectAnswers.length == 0) {
+        toast({
+          title: "Error",
+          description: "Please Select Answer",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        setLoading(false);
+        return;
+      }
+    } else {
+      if (correctAnswer == "") {
+        toast({
+          title: "Error",
+          description: "Please Select Answer",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        setLoading(false);
+        return;
+      }
     }
 
     if (poolName == undefined || poolName == "" || poolName == null) {
@@ -319,6 +351,8 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     if (questionType === "fib") {
       questionData = {
         description,
+        poolName,
+        difficulty,
         type: "Fill",
         dropdowns: selectInputs.map((options, index) => ({
           options,
@@ -554,7 +588,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                         {selectInput.map((option, optionIndex) => (
                           <Flex
                             key={optionIndex}
-                            mb={3}
+                            marginBottom={3}
                             justifyContent="space-between"
                           >
                             <Input
