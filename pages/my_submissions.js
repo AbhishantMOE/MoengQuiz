@@ -25,10 +25,9 @@ const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default function MySubmissions() {
     const { data: session } = useSession();
-    //const { data: attempts } = useSWR("/api/quiz/submissions", fetcher);
+    const { data: attempts } = useSWR("/api/quiz/submissions", fetcher);
     const [userDetails, setUserDetails] = useState(null);
     const userId= session?.user?.id
-
     const fetchUserDetails = async (userId) => {
         try {
             const response = await fetch(`/api/user/details/${userId}`);
@@ -49,17 +48,17 @@ export default function MySubmissions() {
         }
     }, [userId]);
 
-    const quizTaken = userDetails?.quizzesTaken
+    //const quizTaken = userDetails?.quizzesTaken
 
     return (
         <Box px={8}>
             <Heading py={5}>My Submissions</Heading>
             <Card>
-                {quizTaken?.length === 0 ? (
+                {attempts?.length === 0 ? (
                     <Text>You haven&apos;t taken any quizzes yet.</Text>
                 ) : (
                     <>
-                        {quizTaken?.map((item, i) => (
+                        {attempts?.map((item, i) => (
                             <QuizItem key={i} quizTakenItem={item} />
                         ))}
                     </>
@@ -74,7 +73,6 @@ const QuizItem = ({ quizTakenItem }) => {
     const [show, setShow] = useState(false);
 
     const handleToggle = () => setShow(!show);
-    
     return (
         <Box mb={6}>
             <Box onClick={handleToggle} cursor='pointer'>
@@ -90,7 +88,7 @@ const QuizItem = ({ quizTakenItem }) => {
                                     pathname: "/results",
                                     query: {
                                         attemptId: attempt._id,
-                                        quizTakenId: quizTakenItem._id
+                                        quizTitle: quizTakenItem.quizTitle
                                     },
                                 },
                                 "/results"

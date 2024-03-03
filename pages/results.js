@@ -58,7 +58,7 @@ export default function Results() {
     }
   }, [userId]);
   const { attemptId } = router.query;
-  const { quizTakenId } = router.query;
+  const { quizTitle } = router.query;
   const { data: attemptInfo } = useSWR(
     () => `/api/quiz/attempt/${attemptId}`,
     fetcher
@@ -93,9 +93,9 @@ export default function Results() {
     }
   });
 
-  const quizTaken = userDetails?.quizzesTaken?.find(
-    (item) => item._id === quizTakenId
-  );
+  // const quizTaken = userDetails?.quizzesTaken?.find(
+  //   (item) => item._id === quizTakenId
+  // );
 
   return (
     <Box px={8} style={{ fontFamily: "Poppins" }}>
@@ -110,7 +110,7 @@ export default function Results() {
           <Card>
             <Flex alignItems={"center"} justifyContent={"space-between"}>
               <Flex alignItems={"center"}>
-                <Text fontSize={"xl"}>{quizTaken?.quizTitle}</Text>
+                <Text fontSize={"xl"}>{quizTitle}</Text>
               </Flex>
               <Text fontSize={"md"}>
                 You scored {attemptInfo?.score / attemptInfo?.responses?.length * 100}% 

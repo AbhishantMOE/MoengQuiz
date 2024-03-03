@@ -85,7 +85,7 @@ async function markQuiz(req, res) {
 
     const questionsU = await quiz.questions;
 
-    console.log("=+++>", questionsU);
+    //console.log("=+++>", questionsU);
 
     const { questions } = req.body;
     let score = 0;
@@ -168,30 +168,46 @@ async function markQuiz(req, res) {
     newAttempt.score = score;
     await newAttempt.save();
 
-    const existingQuizTakenIndex = user.quizzesTaken.findIndex(
-      (qt) => String(qt.quizId) === String(quizId)
-    );
-    if (existingQuizTakenIndex !== -1) {
-      user.quizzesTaken[existingQuizTakenIndex].attempts.push(newAttempt);
-      user.markModified(`quizzesTaken.${existingQuizTakenIndex}.attempts`);
-    } else {
-      const quizTaken = new QuizTaken({
+    // const existingQuizTakenIndex = user.quizzesTaken.findIndex(
+    //   (qt) => String(qt.quizId) === String(quizId)
+    // );
+    // if (existingQuizTakenIndex !== -1) {
+    //   user.quizzesTaken[existingQuizTakenIndex].attempts.push(newAttempt);
+    //   user.markModified(`quizzesTaken.${existingQuizTakenIndex}.attempts`);
+    // } else {
+    //   const quizTaken = new QuizTaken({
+    //     quizId: quizId,
+    //     quizTitle: quiz.title,
+    //     attempts: [],
+    //   });
+    //   quizTaken.attempts.push(newAttempt);
+    //   user.quizzesTaken.push(quizTaken);
+    // }
+
+    // await user.save();
+    // const quiz_taken = user.quizzesTaken.find(
+    //   (qt) => String(qt.quizId) === String(quizId)
+    // );
+
+    // Find or create the QuizTaken document
+    let quizTakenDoc = await QuizTakenSchema.findOne({ userId: userId, quizId: quizId });
+    if (!quizTakenDoc) {
+      quizTakenDoc = new QuizTakenSchema({
+        userId: userId,
+        userName: user.userName,
         quizId: quizId,
         quizTitle: quiz.title,
-        attempts: [],
       });
-      quizTaken.attempts.push(newAttempt);
-      user.quizzesTaken.push(quizTaken);
     }
 
-    await user.save();
-    const quiz_taken = user.quizzesTaken.find(
-      (qt) => String(qt.quizId) === String(quizId)
-    );
+    // Add the new attempt to the QuizTaken document and save
+    quizTakenDoc.attempts.push(newAttempt);
+    await quizTakenDoc.save();
+
     return res.status(200).json({
       message: "Quiz Submitted Successfully!",
       attemptId: newAttempt._id,
-      quizTakenId: quiz_taken._id,
+      quizTakenId: quizTakenDoc._id,
     });
   } catch (err) {
     console.error(err);

@@ -11,11 +11,15 @@ import { useSession } from "next-auth/react";
 import Layout from "../components/Layout"
 import Head from "next/head"
 import { useEffect, useState } from 'react';
+import axios from "axios";
+import useSWR from "swr";
+
+const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default function Profile(){
     const [userDetails, setUserDetails] = useState(null);
     const { data } = useSession();
-
+    const { data: attempts } = useSWR("/api/quiz/submissions", fetcher);
     const fetchUserDetails = async (userId) => {
         try {
             const response = await fetch(`/api/user/details/${userId}`);
@@ -124,7 +128,8 @@ export default function Profile(){
                                         Quizzes Submitted
                                     </Text>
                                     <Text color={"gray.900"} fontSize={"md"}>
-                                    {userDetails?.quizzesTaken.length}
+                                    {/* {userDetails?.quizzesTaken.length} */}
+                                    {attempts?.length}
                                     </Text>
                                 </Box>
                             </SimpleGrid>

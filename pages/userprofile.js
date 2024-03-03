@@ -20,6 +20,7 @@ export default function UserProfile () {
     const { userId } = router.query;
 
     const { data } = useSWR(`/api/user/details/${userId}`, fetcher);
+    const { data: attempts } = useSWR("/api/quiz/submissions", fetcher);
 
     return (
         <Box px={8} style={{ fontFamily: "Poppins" }}>
@@ -111,7 +112,7 @@ export default function UserProfile () {
                                         Quizzes Submitted
                                     </Text>
                                     <Text color={"gray.900"} fontSize={"md"}>
-                                    {data?.quizzesTaken.length}
+                                    {attempts?.length}
                                     </Text>
                                 </Box>
                             </SimpleGrid>

@@ -1,7 +1,6 @@
 import { Schema } from "mongoose";
 import mongoose from "mongoose";
 import crypto from "crypto";
-import { default as QuizTakenSchema } from './quiz_taken';
 
 const User = new Schema({
     name: { type: String },
@@ -11,7 +10,6 @@ const User = new Schema({
     isAdmin: { type: Boolean },
     createdAt: { type: Date },
     quizzesEnrolled: { type: [String] },
-    quizzesTaken: { type: [QuizTakenSchema] }
 });
 
 User.methods.setPassword = function(password) {

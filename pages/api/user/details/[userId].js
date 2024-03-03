@@ -22,7 +22,7 @@ async function getUserDetail(req, res) {
       email: user.email,
       isAdmin: user.isAdmin,
       quizzesEnrolled: user.quizzesEnrolled,
-      quizzesTaken: user.quizzesTaken,
+      // quizzesTaken: user.quizzesTaken,
     });
   } catch (err) {
     console.log(err);
