@@ -41,6 +41,17 @@ export default function CreateQuiz() {
 
   const clickSubmit = async () => {
     setLoading(true);
+    if (poolName == null || poolName == "") {
+      toast({
+        title: "Errorr",
+        description: "Please Enter Pool Name",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      setLoading(false);
+      return;
+    }
     const poolData = {
       poolName,
       authorId: session?.user?.id,

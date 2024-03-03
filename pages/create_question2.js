@@ -180,7 +180,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     setCorrectAnswer("");
     setQuestionType("");
     setLoading(false);
-    setDifficulty("")
+    setDifficulty("");
   };
   const handleRemoveOption = (index) => {
     const newOptions = options1.filter((option, opIndex) => opIndex !== index);
@@ -188,7 +188,6 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     if (correctAnswer.includes(newOptions[index])) {
       setCorrectAnswer(correctAnswer.filter((cA) => cA !== newOptions[index]));
     }
-
   };
 
   const uploadImage = async () => {
@@ -211,11 +210,14 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
   };
 
   const clickSubmit = async () => {
-
     setLoading(true);
 
-    if(difficulty == "" || description=="" || correctAnswer==""|| questionType==""
-        ){
+    if (
+      difficulty == "" ||
+      description == "" ||
+      correctAnswer == "" ||
+      questionType == ""
+    ) {
       toast({
         title: "Error",
         description: "Please select required fields before proceeding",
@@ -226,8 +228,19 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
       setLoading(false);
       return;
     }
-    
-    
+
+    if (poolName == undefined || poolName == "" || poolName == null) {
+      toast({
+        title: "Error",
+        description: "Please Enter Pool Name",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      setLoading(false);
+      return;
+    }
+
     let questionData = {};
 
     if (questionType === "mcq") {
@@ -313,6 +326,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
         })),
       };
     }
+    questionData.quizId = "3333";
     createPoolQuestion(questionData)
       .then((data) => {
         console.log("Resetting it?");
@@ -366,7 +380,10 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                 <FormLabel>Question Type</FormLabel>
                 <Select
                   placeholder="Select the question type"
-                  onChange={(e) => setQuestionType(e.target.value)}
+                  onChange={(e) => {
+                    resetForm();
+                    setQuestionType(e.target.value);
+                  }}
                   value={questionType}
                 >
                   <option value="mcq">
