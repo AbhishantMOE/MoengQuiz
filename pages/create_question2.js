@@ -184,6 +184,13 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
     setSelectAnswers([]);
     setSelectInputs([[]]);
     setOptions([""]);
+    image_url = null;
+    setMarker({
+      top: null,
+      left: null,
+      width: null,
+      height: null,
+    });
   };
   const handleRemoveOption = (index) => {
     const newOptions = options1.filter((option, opIndex) => opIndex !== index);
@@ -220,7 +227,9 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
       difficulty,
       description,
       correctAnswer,
-      questionType
+      questionType,
+      marker,
+      image_url
     );
 
     if (difficulty == "" || description == "" || questionType == "") {
@@ -240,6 +249,18 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
         toast({
           title: "Error",
           description: "Please Select Answer",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        setLoading(false);
+        return;
+      }
+    } else if (questionType == "hotspot") {
+      if (marker.top == null) {
+        toast({
+          title: "Error",
+          description: "Please Select Coordinates/ upload Image",
           status: "error",
           duration: 3000,
           isClosable: true,
