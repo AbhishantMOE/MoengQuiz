@@ -13,6 +13,8 @@ const Quiz = new Schema({
   endTime: { type: Date },
   questions: { type: Array },
   passingMarks: { type: Number },
+  attempts: { type: Number },
+
 });
 
 Quiz.methods.addQuizTaken = function (quizId) {

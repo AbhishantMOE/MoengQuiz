@@ -49,6 +49,7 @@ export default function CreateQuiz() {
   const [noOfQuestions, setNoOfQuestions] = useState(10);
   const [passingMarks, setPassingMarks] = useState(85);
   const [title, setTitle] = useState("");
+  const [attempts, setAttempts] = useState("");
   const [description, setDescription] = useState("");
   const [scheduledFor, setScheduledFor] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
@@ -101,7 +102,6 @@ export default function CreateQuiz() {
     let list = await Promise.all(
       poolList.map((item) => getPoolQIndividual(item.name))
     ).then((data) => {
-      console.log("=====>quiz DAta", data);
       const quiz = {
         title: title,
         duration: duration,
@@ -111,6 +111,7 @@ export default function CreateQuiz() {
         endTime: endTime,
         questions: data.flat(),
         passingMarks: passingMarks,
+        attempts: attempts
       };
       const resetForm = () => {
         setTitle("");
@@ -154,16 +155,6 @@ export default function CreateQuiz() {
   const clickSubmit = async () => {
     setLoading(true);
     getPoolQuestions(poolSelectPref);
-
-    // const quiz = {
-    //   title: title,
-    //   duration: duration,
-    //   description: description,
-    //   authorId: session.user.id,
-    //   scheduledFor: scheduledFor,
-    //   endTime: endTime,
-    //   questions: poolq,
-    // };
 
     const resetForm = () => {
       setTitle("");
@@ -271,6 +262,17 @@ export default function CreateQuiz() {
                   type={"number"}
                   value={passingMarks}
                   onChange={(e) => setPassingMarks(e.target.value)}
+                />
+              </FormControl>
+              <FormControl id="no_of_attempts">
+                <FormLabel>Number of Attempts %</FormLabel>
+                <Input
+                  variant={"flushed"}
+                  color={"gray.500"}
+                  placeholder="Select No Of Attempts"
+                  type={"number"}
+                  value={attempts}
+                  onChange={(e) => setAttempts(e.target.value)}
                 />
               </FormControl>
 

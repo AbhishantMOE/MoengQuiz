@@ -45,8 +45,6 @@ const Questions = ({ quiz }) => {
   }, [quiz?.questions]);
 
   const handleDelete = async (questionId) => {
-    console.log("This is q id", questionId);
-    console.log("This is quiz obj", quiz);
 
     const data = {
       quizId : quiz.id,
@@ -54,7 +52,6 @@ const Questions = ({ quiz }) => {
     }
     await axios.delete(`/api/question/updating/questiondelupdate`,{data});
     const arr = questions.filter((question) => question._id != questionId)
-    console.log("This is the new question array ====>", arr);
     setQuestions(arr);
   };
 
@@ -241,16 +238,16 @@ const QuestionItem = ({
               <div style={{ position: "relative" }}>
                 <Image
                   src={question?.imageUrl}
-                  style={{ width: "750px", height: "500px" }}
+                  // style={{ width: "750px", height: "500px" }}
                   alt="Image"
                 />
                 <div
                   style={{
                     position: "absolute",
-                    top: `${question.correctAnswer.top}px`,
-                    left: `${question.correctAnswer.left}px`,
-                    width: `${question.correctAnswer.width}px`,
-                    height: `${question.correctAnswer.height}px`,
+                    top: `${question.correctAnswer[0].top}px`,
+                    left: `${question.correctAnswer[0].left}px`,
+                    width: `${question.correctAnswer[0].width}px`,
+                    height: `${question.correctAnswer[0].height}px`,
                     border: "2px solid red",
                     boxSizing: "border-box",
                   }}

@@ -463,7 +463,6 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
                   <Radio value="hard">Hard</Radio>
                 </Stack>
               </RadioGroup>
-              {/* ////// */}
               <FormControl id="description" as={GridItem} colSpan={6}>
                 <FormLabel>Question</FormLabel>
                 <Textarea

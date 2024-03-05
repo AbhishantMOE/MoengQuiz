@@ -41,6 +41,7 @@ async function createQuiz(req, res) {
       endTime,
       questions,
       passingMarks,
+      attempts
     } = req.body;
 
     const newQuiz = new QuizSchema({
@@ -54,6 +55,7 @@ async function createQuiz(req, res) {
       endTime: endTime,
       questions: questions,
       passingMarks: passingMarks,
+      attempts: attempts
     });
 
     await newQuiz.save();
