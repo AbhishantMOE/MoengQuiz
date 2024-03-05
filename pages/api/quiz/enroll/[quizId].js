@@ -1,44 +1,45 @@
 import MongoDbClient from "../../../../utils/mongo_client";
 import { QuizSchema, UserSchema } from "../../../../schemas";
 
-
 export default async function handler(req, res) {
-    switch (req.method) {
-        case "POST":
-            return updateAssignedUsers(req, res);
-    }
+  switch (req.method) {
+    case "POST":
+      return updateAssignedUsers(req, res);
+  }
 }
 
 async function updateAssignedUsers(req, res) {
-    const { quizId } = req.query;
-    const {usersEnrolled} = req.body
-    const db = new MongoDbClient();
+  const { quizId } = req.query;
+  const { usersEnrolled } = req.body;
+  const db = new MongoDbClient();
 
-    console.log("Iam in asssigned userss", quizId, usersEnrolled);
-    await db.initClient();
+  console.log("Iam in asssigned userss", quizId, usersEnrolled);
+  await db.initClient();
 
-    try {
-        let quiz = await QuizSchema.findById(quizId);
-        let users = await UserSchema.find({_id: {$in: usersEnrolled}});
-        console.log("Iam in final", quiz, users);
+  try {
+    let quiz = await QuizSchema.findById(quizId);
+    let users = await UserSchema.find({ _id: { $in: usersEnrolled } });
+    console.log("Iam in final", quiz, users);
 
-        quiz.usersEnrolled = []
-        for(let i=0; i<users.length; i++){
-            if (!users[i].quizzesEnrolled.includes(quizId)) {
-                
-                users[i].quizzesEnrolled.push(quizId);
-                await users[i].save();
-              } else quiz.usersEnrolled.push(users[i]._id);
-        }
+    quiz.usersEnrolled = [];
+    for (let i = 0; i < users.length; i++) {
+      if (!users[i].quizzesEnrolled.includes(quizId)) {
+        users[i].quizzesEnrolled.push(quizId);
+        await users[i].save();
+      }
+      quiz.usersEnrolled.push(users[i]._id);
+    }
 
-        await quiz.save()
-        return res.status(200).json({
-            message: 'User enrolled successfully'
-        })
-    } catch (err) {
-        console.log(err);
-        return res.status(400).json({
-            message: 'An error was encountered'
-        });
-    }  
+    console.log("Iam in final afterrrrrrr", quiz, users);
+
+    await quiz.save();
+    return res.status(200).json({
+      message: "User enrolled successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      message: "An error was encountered",
+    });
+  }
 }
