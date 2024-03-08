@@ -17,13 +17,15 @@ async function createPool(req, res) {
   await db.initClient();
 
   try {
-    const quiz = await QuestionPoolSchema.updateOne(
-      { name: poolName },
+    const pool = new QuestionPoolSchema({
+      name: poolName,
+      visibility: true,
+      easy:0,
+      medium:0,
+      hard:0
+    });
 
-      {
-        visibility: true,
-      }
-    );
+    await pool.save()
 
     return res.status(200).json({
       message: "Question Pool added successfully",

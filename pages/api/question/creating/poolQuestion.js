@@ -22,6 +22,7 @@ async function createPoolQuestion(req, res) {
     difficulty,
     quizId,
     dropdowns,
+    poolId
   } = req.body;
 
   console.log("Requesting bodyyy", quizId);
@@ -124,13 +125,13 @@ async function createPoolQuestion(req, res) {
     } else fieldToUpdate = { hard: 1 };
 
     const quiz = await QuestionPoolSchema.updateOne(
-      { name: poolName },
+      { _id: poolId },
       {
         $push: { questions: newQuestion },
         $inc: { count: 1 },
         $inc: fieldToUpdate,
         authorId: authorId,
-        visibility: false,
+        visibility: true,
         poolName: poolName,
       },
       { upsert: true }

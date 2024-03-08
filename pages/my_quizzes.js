@@ -19,6 +19,8 @@ export default function MyQuizzes() {
         fetcher
     );
 
+    const { data: quizzesTaken } = useSWR("/api/quiz/submissions", fetcher);
+
     return (
         <>
             <Head>
@@ -27,7 +29,7 @@ export default function MyQuizzes() {
             {session?.user?.isAdmin ? (
                 <AuthorQuizzes quizzes={quizzes} />
             ) : (
-                <StudentQuizzes quizzes={quizzes} />
+                <StudentQuizzes quizzes={quizzes} quizzesTaken={quizzesTaken} />
             )}
         </>
     );

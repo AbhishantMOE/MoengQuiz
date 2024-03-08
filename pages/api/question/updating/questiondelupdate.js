@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import MongoDbClient from "../../../../utils/mongo_client";
-import { QuestionSchema, QuizSchema } from "../../../../schemas";
+import { QuestionPoolSchema, QuestionSchema, QuizSchema } from "../../../../schemas";
 import { Question } from "../../../../schemas/question";
 
 
@@ -44,34 +44,42 @@ async function updateQuestion(req, res) {
 
 async function removeQuestion(req, res) {
     console.log("This is the req body", req.body);
-    const { quizId, questionId } = req.body;
+    const { questionId, poolId } = req.body;
     const db = new MongoDbClient();
     await db.initClient();
 
     try {
-        console.log("something is happening");
         //const question = await Question.findById(questionId);
         //const quizId = question.quizId;
 
         // Then: Remove the question from the Question collection
         //await Question.findByIdAndDelete(questionId);
         // At last: Remove the question from the respective Quiz
-        const quiz = await QuizSchema.findById(quizId);
-
+        let pool = await QuestionPoolSchema.findById(poolId);
+        // console.log(pool)
         // The questions are plain JS objects, not mongoose docs, we have to find it manually
-        const questionToRemove = quiz.questions.find(question => question._id.toString() === questionId);
+        const questionToRemove = pool.questions.find(question => question._id.toString() === questionId);
 
         // Removing it from array
-        const questionIndex = quiz.questions.indexOf(questionToRemove);
+        const questionIndex = pool.questions.indexOf(questionToRemove);
         if (questionIndex !== -1) {
-            quiz.questions.splice(questionIndex, 1);
+            pool.questions.splice(questionIndex, 1);
         }
 
         // Telling mongoose that we've changed the questions array
-        quiz.markModified('questions');
-
+        pool.markModified('questions');
+        if(questionToRemove.difficulty === 'easy'){
+                pool.easy = pool.easy-1
+                pool.markModified("easy")
+        }else if(questionToRemove.difficulty === 'medium'){
+                pool.medium = pool.medium-1
+                pool.markModified("medium")
+        }else{
+                pool.hard = pool.hard-1
+                pool.markModified("hard")
+        }
         // Now, save it back to database
-        await quiz.save();
+        await pool.save();
 
         return res.status(200).json({
             message: "Question removed successfully",

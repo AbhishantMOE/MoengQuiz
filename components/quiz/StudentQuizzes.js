@@ -17,10 +17,14 @@ import { startQuiz } from "../../services/quiz";
 import ConfirmDialog from "../common/ConfirmDialog";
 import { useSession } from "next-auth/react";
 import Countdown from "../Countdown";
+import useSWR from "swr";
 
+const fetcher = (url) => axios.get(url).then((resp) => resp.data);
 
-const StudentQuizzes = ({ quizzes }) => {
+const StudentQuizzes = ({ quizzes, quizzesTaken }) => {
     const { data: session } = useSession();
+    //const { data: quizzesTaken } = useSWR("/api/quiz/submissions", fetcher);
+    console.log(quizzesTaken)
     return (
         <Box px={8}>
             <Heading py={5}>My Quizzes</Heading>
@@ -34,6 +38,7 @@ const StudentQuizzes = ({ quizzes }) => {
                                 key={quiz?._id}
                                 quiz={quiz}
                                 user={session?.user}
+                                quizzesTaken={quizzesTaken}
                             />
                         ))}
                     </>
@@ -43,14 +48,25 @@ const StudentQuizzes = ({ quizzes }) => {
     );
 };
 
-const QuizItem = ({ quiz, user }) => {
+const QuizItem = ({ quiz, user, quizzesTaken}) => {
     const router = useRouter();
     const toast = useToast();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [quizData, setQuizData ] = useState();
-
-    console.log(quiz._id, " ", user.id)
+    
+    // let quizTaken
+    // for(let i=0;i<quizzesTaken?.length;i++){
+    //     if(quizzesTaken[i].quizId === quiz._id){
+    //         quizTaken = quizzesTaken[i]
+    //     }
+    // }
+    // const quizTaken = quizzesTaken.filter(quiz => quiz.quizId === quiz._id)
+    // console.log(quizzesTaken, "   ",quizTaken)
+    // console.log(quiz._id, " ", user.id)
+    
+    //fetch quiztaken for user and quiz here and then compare with the attempts set by admin
+    //disable if attempts.length==attempts set by admin
 
     const start = () => {
 

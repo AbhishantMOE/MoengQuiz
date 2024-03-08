@@ -28,7 +28,6 @@ export default NextAuth({
                         email: user.email,
                         isAdmin: user.isAdmin,
                         quizzesEnrolled: user.quizzesEnrolled,
-                        quizzesTaken: user.quizzesTaken,
                     }
                 } catch (err) {
                     console.log(err)

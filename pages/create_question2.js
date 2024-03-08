@@ -32,10 +32,10 @@ import { Image } from "@chakra-ui/image";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { v4 as uuidv4 } from "uuid";
 //const quizId = 3333;
-export default function CreateQuestion({ poolName, countInc, authorId }) {
+export default function CreateQuestion() {
   const router = useRouter();
   const toast = useToast();
-  const { quizId } = router.query;
+  const { poolId, poolName } = router.query;
   const image_url = null;
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
@@ -282,17 +282,17 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
       }
     }
 
-    if (poolName == undefined || poolName == "" || poolName == null) {
-      toast({
-        title: "Error",
-        description: "Please Enter Pool Name",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      setLoading(false);
-      return;
-    }
+    // if (poolId == undefined || poolId == "" || poolId == null) {
+    //   toast({
+    //     title: "Error",
+    //     description: "Please Enter Pool Name",
+    //     status: "error",
+    //     duration: 3000,
+    //     isClosable: true,
+    //   });
+    //   setLoading(false);
+    //   return;
+    // }
 
     let questionData = {};
 
@@ -382,11 +382,12 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
       };
     }
     questionData.quizId = "3333";
+    questionData.poolName = poolName;
+    questionData.poolId=poolId;
     createPoolQuestion(questionData)
       .then((data) => {
         console.log("Resetting it?");
         resetForm();
-        countInc();
         if (data?.message) {
           toast({
             title: "Success",
@@ -395,7 +396,7 @@ export default function CreateQuestion({ poolName, countInc, authorId }) {
             duration: 9000,
             isClosable: true,
           });
-          //router.push({ pathname: "/quiz_detail", query: { quizId: quizId } });
+          router.push({ pathname: "/pool_detail", query: { poolId: poolId } });
         } else {
           toast({
             title: "Error",

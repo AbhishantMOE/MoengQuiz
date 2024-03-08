@@ -70,7 +70,7 @@ export default function CreateQuiz() {
             duration: 9000,
             isClosable: true,
           });
-          router.push({ pathname: "/my_quizzes" });
+          router.push({ pathname: "/my_pools" });
           //router.push({ pathname: "/quiz_detail", query: { quizId: quizId } });
         } else {
           toast({
@@ -128,12 +128,12 @@ export default function CreateQuiz() {
                 />
               </FormControl>
 
-              <CreateQuestion
+              {/* <CreateQuestion
                 poolName={poolName}
                 authorId={authorId}
                 countInc={() => setCount(count + 1)}
               />
-              <h3>Questions Added: {count}</h3>
+              <h3>Questions Added: {count}</h3> */}
               <Stack spacing={10} my={8}>
                 <Button
                   bg="#00237c"

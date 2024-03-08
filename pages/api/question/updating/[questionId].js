@@ -15,7 +15,7 @@ export default function handler(req, res) {
 async function updateQuestion(req, res) {
     const { questionId } = req.query;
     const { description, options, correctAnswer, type, hotspot } = req.body;  // Add 'type' and 'hotspot' fields
-
+    console.log(questionId)
     const db = new MongoDbClient();
     await db.initClient();
 

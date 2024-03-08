@@ -15,6 +15,7 @@ async function fetchPoolList(req, res) {
     const list = await QuestionPoolSchema.find({ visibility: true });
     console.log(list);
     const modifiedList = list.map((item) => ({
+      id:item._id,
       name: item.name,
       count: item.questions.length,
       easy: item?.easy,
