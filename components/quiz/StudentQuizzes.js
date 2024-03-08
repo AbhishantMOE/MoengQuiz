@@ -17,13 +17,9 @@ import { startQuiz } from "../../services/quiz";
 import ConfirmDialog from "../common/ConfirmDialog";
 import { useSession } from "next-auth/react";
 import Countdown from "../Countdown";
-import useSWR from "swr";
-
-const fetcher = (url) => axios.get(url).then((resp) => resp.data);
 
 const StudentQuizzes = ({ quizzes, quizzesTaken }) => {
     const { data: session } = useSession();
-    //const { data: quizzesTaken } = useSWR("/api/quiz/submissions", fetcher);
     console.log(quizzesTaken)
     return (
         <Box px={8}>
@@ -55,19 +51,14 @@ const QuizItem = ({ quiz, user, quizzesTaken}) => {
     const [loading, setLoading] = useState(false);
     const [quizData, setQuizData ] = useState();
     
-    // let quizTaken
-    // for(let i=0;i<quizzesTaken?.length;i++){
-    //     if(quizzesTaken[i].quizId === quiz._id){
-    //         quizTaken = quizzesTaken[i]
-    //     }
-    // }
-    // const quizTaken = quizzesTaken.filter(quiz => quiz.quizId === quiz._id)
-    // console.log(quizzesTaken, "   ",quizTaken)
-    // console.log(quiz._id, " ", user.id)
-    
-    //fetch quiztaken for user and quiz here and then compare with the attempts set by admin
-    //disable if attempts.length==attempts set by admin
-
+    let quizTaken
+    for(let i=0;i<quizzesTaken?.length;i++){
+        if(quizzesTaken[i].quizId === quiz._id){
+            quizTaken = quizzesTaken[i]
+            break;
+        }
+    }
+    console.log(quizzesTaken, "   ",quizTaken)
     const start = () => {
 
         startQuiz(quiz._id, user.id)
@@ -147,20 +138,41 @@ const QuizItem = ({ quiz, user, quizzesTaken}) => {
                     {quiz?.description}
                 </Tag>
                 <HStack spacing={4}>
+                    {quiz?.attempts>quizTaken?.attempts || !quizTaken?
+                    (<Tooltip
+                    label={"Start Quiz"}
+                    hasArrow
+                    placement={"top"}
+                    bg={"teal"}
+                >
+                    <IconButton
+                        size={"md"}
+                        icon={<FiPlay />}
+                        isRound
+                        bg={"gray.300"}
+                        onClick={() => setShowConfirmModal(true)}
+                    />
+                </Tooltip>) :(
                     <Tooltip
-                        label={"Start Quiz"}
-                        hasArrow
-                        placement={"top"}
-                        bg={"teal"}
-                    >
-                        <IconButton
-                            size={"md"}
-                            icon={<FiPlay />}
-                            isRound
-                            bg={"gray.300"}
-                            onClick={() => setShowConfirmModal(true)}
+                    label={"Attempt Limit Reached"}
+                    hasArrow
+                    placement={"top"}
+                    bg={"teal"}
+                >
+                    <span>   
+                    <IconButton
+                        size={"md"}
+                        icon={<FiPlay />}
+                        isRound
+                        bg={"gray.300"}
+                        onClick={() => setShowConfirmModal(true)}
+                        isDisabled
                         />
-                    </Tooltip>
+                    </span>
+                </Tooltip>
+                )
+                    }
+                    
                 </HStack>
             </Flex>
             <br />
