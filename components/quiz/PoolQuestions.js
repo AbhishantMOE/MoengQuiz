@@ -28,27 +28,12 @@ import {
   
   const fetcher = (url) => axios.get(url).then((res) => res.data);
   
-//   const validateUser = (currentUserId) =>
-//     String(currentUserId) !== String(authorUserId);
-  
   const PoolQuestions = ({ pool , setUpdate}) => {
     const { data: session } = useSession();
     const router = useRouter();
     const [questions, setQuestions] = useState(pool?.questions);
-    console.log("These are pool questions",pool?.questions);
-  
-    useEffect(() => {
-      setQuestions(pool?.questions);
-      questions?.forEach((question) => {
-        console.log(question);
-      });
-    }, [pool?.questions]);
-
-    console.log(pool)
   
     const handleDelete = async (questionId) => {
-      console.log("This is q id", questionId);
-      console.log("This is pool obj", pool);
       const poolId = pool?.id
       const data = {
         poolId,
@@ -56,13 +41,10 @@ import {
       }
       await axios.delete(`/api/question/updating/questiondelupdate`,{data});
       const arr = questions.filter((question) => question._id != questionId)
-      console.log("This is the new question array ====>", arr);
       setQuestions(arr);
-      window.location.reload();
     };
   
     const handleUpdate = async (updatedQuestion) => {
-        console.log(updatedQuestion)
       await axios.put(
         `/api/question/updating/${updatedQuestion._id}`,
         updatedQuestion

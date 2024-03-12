@@ -20,18 +20,14 @@ const fetcher = (url) => axios.get(url).then((resp) => resp.data);
 export default function EnrollUsers({ quiz, isOpen, onClose }) {
   const { data: users } = useSWR("/api/user", fetcher);
   const quizId = quiz?.id;
-  console.log("The quizzzzz", quiz);
-  console.log("These are the userses", users);
   const [alreadyEnrolled, setAlreadyEnrolled] = useState([]);
   if (
     quiz !== undefined &&
     quiz.usersEnrolled.length != 0 &&
     alreadyEnrolled.length == 0
   ) {
-    //console.log("Iam no undefined", quiz);
     setAlreadyEnrolled([...quiz.usersEnrolled]);
   }
-  console.log("alreday", alreadyEnrolled);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -40,7 +36,6 @@ export default function EnrollUsers({ quiz, isOpen, onClose }) {
     quiz.usersEnrolled.length != 0 &&
     selectedUsers.length == 0
   ) {
-    //console.log("Iam no undefined", quiz);
     setSelectedUsers([...quiz.usersEnrolled]);
   }
 
@@ -52,7 +47,6 @@ export default function EnrollUsers({ quiz, isOpen, onClose }) {
     }
   };
   const onSubmit = async () => {
-    console.log("These users were selected ====,", selectedUsers);
     try {
       const response = await axios.post(`/api/quiz/enroll/${quizId}`, {
         usersEnrolled: selectedUsers,

@@ -35,14 +35,6 @@ const Questions = ({ quiz }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [questions, setQuestions] = useState(quiz?.questions);
-  console.log("These are quiz questions",questions);
-
-  useEffect(() => {
-    setQuestions(quiz?.questions);
-    quiz?.questions.forEach((question) => {
-      console.log(question);
-    });
-  }, [quiz?.questions]);
 
   const handleDelete = async (questionId) => {
 

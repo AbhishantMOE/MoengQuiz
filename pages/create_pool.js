@@ -57,11 +57,8 @@ export default function CreateQuiz() {
       authorId: session?.user?.id,
     };
 
-    console.log("YTis is ", poolData);
-
     createPool(poolData)
       .then((data) => {
-        //console.log("Errororo", data);
         if (data?.message) {
           toast({
             title: "Success",
@@ -80,7 +77,6 @@ export default function CreateQuiz() {
             duration: 9000,
             isClosable: true,
           });
-          console.log("Not Executed");
         }
       })
       .finally(() => setLoading(false));

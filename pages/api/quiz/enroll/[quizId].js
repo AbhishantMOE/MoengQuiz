@@ -13,13 +13,11 @@ async function updateAssignedUsers(req, res) {
   const { usersEnrolled } = req.body;
   const db = new MongoDbClient();
 
-  console.log("Iam in asssigned userss", quizId, usersEnrolled);
   await db.initClient();
 
   try {
     let quiz = await QuizSchema.findById(quizId);
     let users = await UserSchema.find({ _id: { $in: usersEnrolled } });
-    console.log("Iam in final", quiz, users);
 
     quiz.usersEnrolled = [];
     for (let i = 0; i < users.length; i++) {
@@ -29,8 +27,6 @@ async function updateAssignedUsers(req, res) {
       }
       quiz.usersEnrolled.push(users[i]._id);
     }
-
-    console.log("Iam in final afterrrrrrr", quiz, users);
 
     await quiz.save();
     return res.status(200).json({

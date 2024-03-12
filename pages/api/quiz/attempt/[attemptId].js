@@ -16,7 +16,6 @@ async function getResponses(req, res) {
   const { attemptId } = req.query;
 
   try {
-    console.log("This the attempt ID", attemptId);
     let attempt = await Attempt.findById(attemptId);
     attempt = attempt.toJSON();
 
@@ -34,7 +33,6 @@ async function getResponses(req, res) {
 
     responses = responses.map((item) => item.toJSON());
     attemptInfo.responses = responses;
-    console.log("Attempt Info", attemptInfo);
 
     return res.status(200).json(attemptInfo);
   } catch (err) {

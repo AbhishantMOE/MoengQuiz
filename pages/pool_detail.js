@@ -19,7 +19,6 @@ export default function QuizDetails() {
 
   useEffect(() => {
     const { poolId: id } = router.query;
-    console.log(id)
     if (id) {
       setPoolId(id);
     }

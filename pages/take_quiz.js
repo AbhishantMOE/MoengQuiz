@@ -57,7 +57,7 @@ export default function Quiz() {
     height: null,
   });
   const [dragging, setDragging] = useState(false);
-  const [fullscreenWarnings, setFullscreenWarnings] = useState(0);
+  const [fullscreenWarnings, setFullscreenWarnings] = useState(3);
 
   function launchFullScreen(element) {
     if (element?.requestFullscreen) {
@@ -92,31 +92,26 @@ export default function Quiz() {
   useEffect(() => {
     const fullscreenCheckInterval = setInterval(() => {
       if (!document.fullscreenElement) {
-        setFullscreenWarnings((warnings) => warnings + 1);
-
+        setFullscreenWarnings((warnings) => warnings - 1);
+  
         toast({
           title: "Warning",
-          description: "Please remain in fullscreen mode.",
+          description: `You have ${fullscreenWarnings - 1} warnings left. Please remain in fullscreen mode.`,
           status: "warning",
           duration: 5000,
           isClosable: true,
         });
-
+  
         launchFullScreen(document.documentElement);
-
-        if (fullscreenWarnings >= 3) {
-          console.log(
-            `User has received ${
-              fullscreenWarnings + 1
-            } warnings about staying in fullscreen.`
-          );
-          resetQuiz();
+  
+        if (fullscreenWarnings <= 1) {
+          clickSubmit();
           setShowResetModal(false);
           router.replace(`/quizzes`);
         }
       }
     }, 5000);
-
+  
     return () => clearInterval(fullscreenCheckInterval);
   }, [toast, fullscreenWarnings]);
 
@@ -234,8 +229,6 @@ export default function Quiz() {
       }
     }
 
-    console.log("All ans rra ig", allAns);
-
     let submitData = allAns.map((ans) => {
       if (Array.isArray(ans.selectedOption)) {
         return { ...ans, selectedOption: ans.selectedOption.join(",") };
@@ -297,8 +290,6 @@ export default function Quiz() {
     if (questions?.length === 0) {
       return;
     }
-
-    console.log(questions, "questions");
 
     questions?.map((ques) => {
       let questObj;
@@ -366,7 +357,6 @@ export default function Quiz() {
     setShowResetModal(false);
     router.replace(`/quizzes`);
   };
-  console.log(allAns);
 
   return (
     <Box fontFamily={"Poppins"}>

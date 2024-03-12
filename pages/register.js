@@ -44,6 +44,17 @@ export default function Register() {
 
   const clickSubmit = async () => {
 
+    if (!/^[^\s@]+@moengage.com$/.test(email)){
+      toast({
+        title: "Error",
+        description: "Please use your MoEngage email address to sign up",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast({
         title: "Error",

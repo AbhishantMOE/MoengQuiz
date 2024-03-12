@@ -43,7 +43,6 @@ export default function Navbar() {
       redirect: true,
       callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
     });
-    console.log("logout");
     router.push(result.url);
   };
 

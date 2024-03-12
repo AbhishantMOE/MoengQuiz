@@ -80,7 +80,6 @@ export default function Results() {
   attemptInfo?.responses.forEach((response) => {
     const question = questionsMap.get(response.questionId);
     if (question) {
-      // console.log(question);
       if (question.imageUrl) {
         response.imageUrl = question.imageUrl;
       }

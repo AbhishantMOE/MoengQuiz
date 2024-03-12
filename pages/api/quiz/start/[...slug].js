@@ -81,11 +81,9 @@ async function markQuiz(req, res) {
   try {
     const user = await UserSchema.findById(userId);
     const quiz = await QuizSchema.findById(quizId);
-    // const questionsU = await Question.find({ quizId });
 
     const questionsU = await quiz.questions;
 
-    //console.log("=+++>", questionsU);
 
     const { questions } = req.body;
     let score = 0;
@@ -159,8 +157,6 @@ async function markQuiz(req, res) {
       });
 
       await newResponse.save();
-
-      console.log("Saved Succesfully respnse?");
 
       newAttempt.responses.push(newResponse._id);
     }

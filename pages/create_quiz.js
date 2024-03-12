@@ -64,7 +64,6 @@ export default function CreateQuiz() {
   const [poolSelectPref, setPoolSelectPref] = useState([]);
 
   useEffect(() => {
-    console.log(poolSelectPref, "-------");
   }, [poolSelectPref]);
 
   const setPoolPref = (item) => {
@@ -154,6 +153,45 @@ export default function CreateQuiz() {
 
   const clickSubmit = async () => {
     setLoading(true);
+
+    const currentDate = new Date();
+    currentDate.setSeconds(0, 0); 
+
+    if (new Date(scheduledFor) <= currentDate || new Date(endTime) <= currentDate) {
+        toast({
+          title: "Error",
+          description: "Quiz start time and end time should not be in the past",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+        setLoading(false);
+        return;
+    }
+
+    if (new Date(scheduledFor) >= new Date(endTime)) {
+        toast({
+          title: "Error",
+          description: "Quiz end time should not be before quiz start time",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+        setLoading(false);
+        return;
+    }
+    if (!attempts || attempts <= 0) {
+      toast({
+        title: "Error",
+        description: "Number of attempts must be greater than 0",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      setLoading(false);
+      return;
+  }
+
     getPoolQuestions(poolSelectPref);
 
     const resetForm = () => {
@@ -162,7 +200,7 @@ export default function CreateQuiz() {
       setDuration(10);
       setLoading(false);
     };
-  };
+};
 
   return (
     <Box>

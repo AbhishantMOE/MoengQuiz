@@ -222,16 +222,6 @@ export default function CreateQuestion() {
   const clickSubmit = async () => {
     setLoading(true);
 
-    console.log(
-      "These are",
-      difficulty,
-      description,
-      correctAnswer,
-      questionType,
-      marker,
-      image_url
-    );
-
     if (difficulty == "" || description == "" || questionType == "") {
       toast({
         title: "Error",
@@ -386,7 +376,6 @@ export default function CreateQuestion() {
     questionData.poolId=poolId;
     createPoolQuestion(questionData)
       .then((data) => {
-        console.log("Resetting it?");
         resetForm();
         if (data?.message) {
           toast({

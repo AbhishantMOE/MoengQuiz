@@ -10,7 +10,6 @@ export default async function handler(req, res) {
 }
 
 async function createPool(req, res) {
-  console.log("-------->", req.body);
   const { poolName, authorId } = req.body;
 
   const db = new MongoDbClient();

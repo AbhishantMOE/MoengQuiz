@@ -11,7 +11,6 @@ export const getPoolQ = async (poolName) => {
     };
 
     const resp = await axios.get(`${BASE_URL}/creating/fetchPoolQ`, config);
-    //console.log("Respppppp======", resp.data);
     return resp.data;
   } catch (err) {
     console.log(err);

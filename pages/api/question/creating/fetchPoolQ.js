@@ -15,10 +15,6 @@ async function fetchPoolList(req, res) {
   // Access the poolName from the query parameters
 
   const { poolName } = req.query;
-  //   console.log(req.query);
-  //   console.log(req.url); // This extracts the `poolName` from the query object
-
-  console.log("Received poolName:", poolName);
 
   try {
     const data = await QuestionPoolSchema.find({
@@ -26,7 +22,6 @@ async function fetchPoolList(req, res) {
       visibility: true,
     });
     const poolQ = data[0].questions;
-    console.log("====>poolQs", Array.isArray(poolQ));
 
     return res.status(200).json(poolQ);
   } catch (err) {

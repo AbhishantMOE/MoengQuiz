@@ -20,13 +20,12 @@ import Countdown from "../Countdown";
 
 const StudentQuizzes = ({ quizzes, quizzesTaken }) => {
     const { data: session } = useSession();
-    console.log(quizzesTaken)
     return (
         <Box px={8}>
             <Heading py={5}>My Quizzes</Heading>
             <Card>
                 {quizzes?.length === 0 ? (
-                    <Text>You haven&apos;t enrolled to any quizzes yet.</Text>
+                    <Text>You haven&apos;t been enrolled to any quizzes yet.</Text>
                 ) : (
                     <>
                         {quizzes?.map((quiz) => (
@@ -58,7 +57,6 @@ const QuizItem = ({ quiz, user, quizzesTaken}) => {
             break;
         }
     }
-    console.log(quizzesTaken, "   ",quizTaken)
     const start = () => {
 
         startQuiz(quiz._id, user.id)
@@ -114,10 +112,6 @@ const QuizItem = ({ quiz, user, quizzesTaken}) => {
                     {/* To add a push state */}
                     <Text
                         fontSize={"3xl"}
-                        _hover={{
-                            borderBottom: "2px solid #4299E1",
-                        }}
-                        cursor={"pointer"}
                     >
                         {quiz?.title}
                     </Text>

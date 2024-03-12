@@ -41,7 +41,7 @@ export default function MyQuizzes() {
     return (
         <>
             <Head>
-                <title>SE Assessment | My Quizzes</title>
+                <title>SE Assessment | My Pools</title>
             </Head>
             {session?.user?.isAdmin && 
             <Box px={8}>
@@ -72,38 +72,7 @@ const PoolItem = ({ pool, setPoolsState }) => {
     const toast = useToast();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    console.log(pool)
 
-    // const remove = () => {
-    //     setLoading(true);
-    //     removeQuiz(pool?._id)
-    //         .then((data) => {
-    //             if (data.message) {
-    //                 setShowConfirmModal(false);
-    //                 toast({
-    //                     title: "Success",
-    //                     description: data?.message,
-    //                     status: "success",
-    //                     duration: 9000,
-    //                     isClosable: true,
-    //                 });
-    //                 setQuizzesState(prev => prev.filter(q => q._id !== quiz._id));
-    //                 router.replace("/my_quizzes");
-    //             } else {
-    //                 toast({
-    //                     title: "Error",
-    //                     description: data?.error,
-    //                     status: "success",
-    //                     duration: 9000,
-    //                     isClosable: true,
-    //                 });
-    //             }
-    //         })
-    //         .finally(() => {
-    //             setLoading(false);
-    //             setShowConfirmModal(false);
-    //         });
-    // };
 
     return (
         <Box mb={6}>
@@ -131,15 +100,6 @@ const PoolItem = ({ pool, setPoolsState }) => {
                         {pool?.name}
                     </Text>
                 </Flex>
-                {/* <Tag
-                    display={{ base: "none", lg: "flex" }}
-                    bg={"teal.400"}
-                    variant="subtle"
-                    size="lg"
-                    borderRadius={"full"}
-                >
-                    {quiz?.description}
-                </Tag> */}
                 <HStack spacing={4}>
                     <Tooltip
                         label={"Remove Pool"}
@@ -166,15 +126,6 @@ const PoolItem = ({ pool, setPoolsState }) => {
                     height: 2,
                 }}
             />
-            {/* <ConfirmDialog
-                isOpen={showConfirmModal}
-                onClose={setShowConfirmModal}
-                title={"Remove Quiz"}
-                description={`Are you sure you want to remove ${pool?.name} pool`}
-                isLoading={loading}
-                loadingText={"Removing"}
-                onClickConfirm={remove}
-            /> */}
         </Box>
     );
 };

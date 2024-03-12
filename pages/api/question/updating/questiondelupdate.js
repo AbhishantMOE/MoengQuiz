@@ -43,7 +43,6 @@ async function updateQuestion(req, res) {
 }
 
 async function removeQuestion(req, res) {
-    console.log("This is the req body", req.body);
     const { questionId, poolId } = req.body;
     const db = new MongoDbClient();
     await db.initClient();

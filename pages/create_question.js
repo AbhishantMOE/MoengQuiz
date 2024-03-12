@@ -211,7 +211,6 @@ export default function CreateQuestion() {
 
   const clickSubmit = async () => {
     setLoading(true);
-    console.log(questionType);
     let questionData = {};
     if (questionType === "mcq") {
       questionData = {
@@ -290,7 +289,6 @@ export default function CreateQuestion() {
           correctAnswer: selectAnswers[index],
         })),
       };
-      console.log(questionData);
     }
 
     createQuestion(quizId, questionData)

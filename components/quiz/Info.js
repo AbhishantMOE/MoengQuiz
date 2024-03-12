@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 const Info = ({ quiz }) => {
     const router = useRouter();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    console.log(quiz);
     return (
       <Card>
         <Flex alignItems={"center"}>
@@ -66,6 +67,35 @@ const Info = ({ quiz }) => {
                 {new Date(quiz?.endTime?.replace("Z", "")).toLocaleString()}
               </Text>
             </Box>
+            <Box mx={2}>
+            <Text
+              color={"gray.400"}
+              fontWeight={600}
+              fontSize="sm"
+              textTransform={"uppercase"}
+            >
+              Number of Attempts
+            </Text>
+            <Text color={"gray.900"} fontSize={"md"}>
+              {quiz?.attempts}
+            </Text>
+            <br/>
+            <br/>
+            <Text
+              color={"gray.400"}
+              fontWeight={600}
+              fontSize="sm"
+              textTransform={"uppercase"}
+            >
+              Number of Users Enrolled
+            </Text>
+            <Text color={"gray.900"} fontSize={"md"}>
+              {quiz?.usersEnrolled?.length}
+            </Text>
+          </Box>
+          <Box mx={2}>
+            
+          </Box>
             <Button
               onClick={() =>
                 router.push(

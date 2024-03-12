@@ -79,7 +79,6 @@ export const enrollToQuizCode = async (quizCode) => {
 export const startQuiz = async (quizId, userId) => {
     try {
         let resp = await axios.patch(`${BASE_URL}/quiz/start/${quizId}/${userId}`);
-        console.log(resp)
 
         return resp.data
 
@@ -114,9 +113,7 @@ export const submitQuiz = async (params, quizData) => {
                 "Content-Type":"application/json"
             }
         }
-        console.log(quizData)
         let resp = await axios.post(`${BASE_URL}/quiz/start/${params.quizId}/${params.userId}`, quizData, config)
-        console.log(resp.data)
 
         return resp.data
 

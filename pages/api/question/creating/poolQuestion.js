@@ -10,7 +10,6 @@ export default async function handler(req, res) {
 }
 
 async function createPoolQuestion(req, res) {
-  console.log("+++++=====", req.body);
   const {
     poolName,
     authorId,
@@ -25,11 +24,8 @@ async function createPoolQuestion(req, res) {
     poolId
   } = req.body;
 
-  console.log("Requesting bodyyy", quizId);
-
   const db = new MongoDbClient();
   await db.initClient();
-  //console.log(type);
 
   try {
     let newQuestion;
@@ -112,7 +108,6 @@ async function createPoolQuestion(req, res) {
         });
     }
 
-    console.log("======>", newQuestion);
 
     await newQuestion.save();
 

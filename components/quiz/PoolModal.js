@@ -44,7 +44,6 @@ function PoolQModal({ isOpen, onOpen, onClose, setPoolPref }) {
   const toast = useToast();
   const getList = () => {
     fetchPool().then((data) => {
-      console.log(data, "datatastast");
       setList(data);
     });
   };
@@ -97,7 +96,6 @@ function PoolQModal({ isOpen, onOpen, onClose, setPoolPref }) {
                             clampValueOnBlur={false}
                             onChange={(valStr, valNum) => {
                               setEasyQN(valNum);
-                              //   console.log(easyQN);
                             }}
                           >
                             <NumberInputField />
@@ -121,7 +119,6 @@ function PoolQModal({ isOpen, onOpen, onClose, setPoolPref }) {
                             clampValueOnBlur={false}
                             onChange={(valStr, valNum) => {
                               setMediumQN(valNum);
-                              //   console.log(easyQN);
                             }}
                           >
                             <NumberInputField />
@@ -145,7 +142,6 @@ function PoolQModal({ isOpen, onOpen, onClose, setPoolPref }) {
                             clampValueOnBlur={false}
                             onChange={(valStr, valNum) => {
                               setHardQN(valNum);
-                              //   console.log(easyQN);
                             }}
                           >
                             <NumberInputField />
