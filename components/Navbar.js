@@ -40,9 +40,10 @@ export default function Navbar() {
   const imagePath = "./moe-bluelogo.png";
   const logout = async () => {
     const result = await signOut({
-      redirect: false,
-      callbackUrl: '/login',
+      redirect: true,
+      callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
     });
+    console.log("logout");
     router.push(result.url);
   };
 

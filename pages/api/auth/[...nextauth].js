@@ -40,7 +40,7 @@ export default NextAuth({
         })
     ],
   pages: {
-    signOut: '/login', // here is where you add the new code
+    signOut: '/login',
   },
     secret: process.env.NEXT_PUBLIC_SECRET ,
     callbacks: {
