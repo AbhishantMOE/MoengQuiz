@@ -24,14 +24,21 @@ const ResponsiveAppBar = () => {
     const { data } = useSession();
     const router = useRouter();
 
+    let callbackUrl
+    if(process.env.MODE === 'dev'){
+      callbackUrl: `http://localhost:3000/login`
+    }else{
+  
+      callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login`
+    }
     const logout = async () => {
-        const result = await signOut({
-            redirect: true,
-            callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
-          });
-        router.push(result.url);
+      const result = await signOut({
+  
+        redirect: true,
+        callbackUrl: callbackUrl
+      });
+      router.push(result.url);
     };
-
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };

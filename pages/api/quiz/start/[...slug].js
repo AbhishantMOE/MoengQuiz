@@ -64,7 +64,6 @@ async function startQuiz(req, res) {
     });
   } catch (err) {
     console.log(err);
-    console.log("err in slugjs");
     return res.status(400).json({
       error: err,
     });
@@ -94,20 +93,27 @@ async function markQuiz(req, res) {
     });
 
     newAttempt = await newAttempt.save();
-
     for (let i = 0; i < questionsU.length; i++) {
       const item = questionsU[i];
       const userAnswer = questions[i].selectedOption;
 
       if (item.type === "Hotspot") {
-        const userClickedTop = userAnswer.top;
-        const userClickedLeft = userAnswer.left;
+        let userClickedTop
+        let userClickedLeft
+        if(userAnswer){
 
+           userClickedTop = userAnswer.top;
+           userClickedLeft = userAnswer.left;
+          
+        }else{
+           userClickedTop = 0;
+           userClickedLeft = 0;
+        }
+        
         const correctTop = item.correctAnswer.top;
         const correctLeft = item.correctAnswer.left;
         const correctBottom = correctTop + item.correctAnswer.height;
         const correctRight = correctLeft + item.correctAnswer.width;
-
         if (
           userClickedTop >= correctTop &&
           userClickedTop <= correctBottom &&
@@ -117,7 +123,7 @@ async function markQuiz(req, res) {
           score += 1;
         }
       } else if (item.type === "MCM") {
-        let userAnsArray = userAnswer.split(",");
+        let userAnsArray = userAnswer?userAnswer.split(","):[];
         if (userAnsArray.length === 0) {
           score += 0;
         }
@@ -128,14 +134,21 @@ async function markQuiz(req, res) {
         }
       } else if (item.type === "Fill") {
         let allCorrect = true;
-        let userAnswerArray = Object.values(userAnswer);
+        let userAnswerArray = userAnswer?Object.values(userAnswer):[];
+
+        if(userAnswerArray.length === 0){
+          allCorrect =false
+        }
 
         userAnswerArray.forEach((answer, index) => {
           if (answer !== item.dropdowns[index].correctAnswer) {
             allCorrect = false;
           }
         });
-        if (allCorrect) score += 1;
+        if (allCorrect){
+          score += 1;
+          
+        } 
       } else {
         if (
           String(userAnswer).toLowerCase() ===
@@ -152,6 +165,7 @@ async function markQuiz(req, res) {
         quizId: quizId,
         type: item.type,
         correctAnswer: item.correctAnswer,
+        dropdowns: item.dropdowns,
         options: item.options,
         attemptId: newAttempt._id,
       });

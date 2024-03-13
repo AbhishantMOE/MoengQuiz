@@ -104,7 +104,7 @@ export default function Quiz() {
   
         launchFullScreen(document.documentElement);
   
-        if (fullscreenWarnings <= 1) {
+        if (fullscreenWarnings <= 0) {
           clickSubmit();
           setShowResetModal(false);
           router.replace(`/quizzes`);
@@ -217,17 +217,6 @@ export default function Quiz() {
    * Submit the quiz to the backend
    */
   const clickSubmit = () => {
-    if (document.fullscreenElement) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
-    }
 
     let submitData = allAns.map((ans) => {
       if (Array.isArray(ans.selectedOption)) {
@@ -248,6 +237,18 @@ export default function Quiz() {
         "/results"
       );
     });
+
+    if (document.fullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
   };
 
   const recordHotspotAnswer = (event) => {

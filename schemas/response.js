@@ -9,7 +9,7 @@ const Response = new Schema({
     correctAnswer: { type: Schema.Types.Mixed },
     options: { type: [String] },
     attemptId: { type: String },
-    type: { type: String, enum: ['MCQ', 'True/False', 'Hotspot','MCM','Reorder'] },  
+    type: { type: String, enum: ['MCQ', 'True/False', 'Hotspot','MCM','Reorder','Fill'] },  
     hotspot: { type: [Number] }
 });
 

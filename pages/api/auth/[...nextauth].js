@@ -8,7 +8,7 @@ export default NextAuth({
     session: {
         jwt: true
     },
-    site: process.env.NEXT_PUBLIC_BASE_URL,
+    //site: process.env.NEXT_PUBLIC_BASE_URL,
     providers: [
         CredentialsProvider({
             async authorize(credentials) {

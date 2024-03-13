@@ -132,7 +132,7 @@ const QuizItem = ({ quiz, user, quizzesTaken}) => {
                     {quiz?.description}
                 </Tag>
                 <HStack spacing={4}>
-                    {quiz?.attempts>quizTaken?.attempts || !quizTaken?
+                    {quiz?.attempts>quizTaken?.attempts?.length || !quizTaken?
                     (<Tooltip
                     label={"Start Quiz"}
                     hasArrow

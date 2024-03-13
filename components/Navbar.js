@@ -38,10 +38,18 @@ export default function Navbar() {
   const { data } = useSession();
   const [open, setOpen] = useState(false);
   const imagePath = "./moe-bluelogo.png";
+  let callbackUrl
+  if(process.env.MODE === 'dev'){
+    callbackUrl: `http://localhost:3000/login`
+  }else{
+
+    callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login`
+  }
   const logout = async () => {
     const result = await signOut({
+
       redirect: true,
-      callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
+      callbackUrl: callbackUrl
     });
     router.push(result.url);
   };
