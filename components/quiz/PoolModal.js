@@ -72,9 +72,6 @@ function PoolQModal({ isOpen, onOpen, onClose, setPoolPref }) {
               <Flex justify={"center"} padding={5}>
                 <TableContainer>
                   <Table variant="simple">
-                    <TableCaption>
-                      Imperial to metric conversion factors
-                    </TableCaption>
                     <Thead>
                       <Tr>
                         <Th>Type</Th>

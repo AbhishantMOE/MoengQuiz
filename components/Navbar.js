@@ -163,18 +163,19 @@ export default function Navbar() {
                     py={4}
                     m={0}
                     _focus={{ boxShadow: "none" }}
-                    onClick={() => router.replace("/create_pool")}
+                    onClick={() => router.replace("/my_pools")}
                   >
-                    Create Pool
+                    My Pools
                   </Tab>
                   <Tab
                     py={4}
                     m={0}
                     _focus={{ boxShadow: "none" }}
-                    onClick={() => router.replace("/my_pools")}
+                    onClick={() => router.replace("/create_pool")}
                   >
-                    My Pools
+                    Create Pool
                   </Tab>
+                  
                   <Tab
                     py={4}
                     m={0}

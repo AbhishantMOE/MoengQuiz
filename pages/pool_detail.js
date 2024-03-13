@@ -24,9 +24,9 @@ export default function QuizDetails() {
     }
   }, [router]);
   const { data: pool } = useSWR(() => `/api/question/creating/pools/${poolId}`, fetcher);
-  // useEffect(() => {
-  //   setPoolData(pool);
-  // },[pool,update]);
+  useEffect(() => {
+    setPoolData(pool);
+  },[pool,update]);
   return (
     <Box px={8} style={{ fontFamily: "Poppins" }}>
       <Head>

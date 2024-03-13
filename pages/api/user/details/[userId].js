@@ -27,7 +27,7 @@ async function getUserDetail(req, res) {
   } catch (err) {
     console.log(err);
     return res.status(400).json({
-      error: "An error was encountered",
+      error: "An error while login was encountered",
     });
   }
 }

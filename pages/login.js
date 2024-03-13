@@ -64,6 +64,7 @@ export default function Login() {
             isClosable: true,
           });
           router.replace("/profile");
+          window.location.reload();
         } else {
           toast({
             title: "Error",

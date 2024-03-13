@@ -35,13 +35,6 @@ export default function UserProfile () {
                     gap={{ base: 0, lg: 16 }}
                     // mx="auto"
                 >
-                    <GridItem colSpan={{ base: "auto", md: 4 }}>
-                        <Card>
-                            <Flex alignItems={"center"}>
-                                <Heading>{data?.name}</Heading>
-                            </Flex>
-                        </Card>
-                    </GridItem>
                     <GridItem colSpan={{ base: "auto", lg: 7 }}>
                         <Card>
                             <SimpleGrid

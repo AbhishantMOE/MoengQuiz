@@ -31,7 +31,18 @@ import {
   const PoolQuestions = ({ pool , setUpdate}) => {
     const { data: session } = useSession();
     const router = useRouter();
-    const [questions, setQuestions] = useState(pool?.questions);
+    const [questions, setQuestions] = useState([]);
+
+    useEffect(() => {
+      setQuestions(pool?.questions)
+    },[pool])
+    console.log(questions);
+
+    for (let i = 0; i < questions?.length; i++) {
+      if(questions[i].type === 'Hotspot'){
+        console.log(questions[i].correctAnswer[0]);
+      }
+    }
   
     const handleDelete = async (questionId) => {
       const poolId = pool?.id
@@ -227,10 +238,10 @@ import {
                   <div
                     style={{
                       position: "absolute",
-                      top: `${question.correctAnswer.top}px`,
-                      left: `${question.correctAnswer.left}px`,
-                      width: `${question.correctAnswer.width}px`,
-                      height: `${question.correctAnswer.height}px`,
+                      top: `${question.correctAnswer[0].top}px`,
+                      left: `${question.correctAnswer[0].left}px`,
+                      width: `${question.correctAnswer[0].width}px`,
+                      height: `${question.correctAnswer[0].height}px`,
                       border: "2px solid red",
                       boxSizing: "border-box",
                     }}

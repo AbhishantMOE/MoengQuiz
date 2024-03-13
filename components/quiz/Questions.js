@@ -34,7 +34,11 @@ const validateUser = (currentUserId, authorUserId) =>
 const Questions = ({ quiz }) => {
   const { data: session } = useSession();
   const router = useRouter();
-  const [questions, setQuestions] = useState(quiz?.questions);
+  const [questions, setQuestions] = useState([]);
+
+  useEffect(()=> {
+    setQuestions(quiz?.questions)
+  },[quiz])
 
   const handleDelete = async (questionId) => {
 
