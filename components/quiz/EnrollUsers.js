@@ -53,6 +53,7 @@ export default function EnrollUsers({ quiz, isOpen, onClose }) {
       });
       setSelectedUsers([]);
       onClose();
+      window.location.reload()
     } catch (error) {
       console.log(error);
     }

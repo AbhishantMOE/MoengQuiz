@@ -32,10 +32,6 @@ export default function QuizDetails() {
         setQuizId(quizIdFromCookie);
       }
     }
-
-    return () => {
-      Cookies.remove('quizId');
-    }
   }, [router.query]);
   const { data: quiz } = useSWR(() => `/api/quiz/details/${quizId}`, fetcher);
   return (
