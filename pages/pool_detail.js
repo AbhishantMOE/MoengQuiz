@@ -10,6 +10,8 @@ import Enrollusers from "../components/quiz/EnrollUsers";
 import Head from "next/head";
 import PoolInfo from "../components/quiz/PoolInfo";
 import PoolQuestions from "../components/quiz/PoolQuestions";
+import Cookies from "js-cookie";
+
 const fetcher = (url) => axios.get(url).then((resp) => resp.data);
 export default function QuizDetails() {
   const router = useRouter();
@@ -23,6 +25,21 @@ export default function QuizDetails() {
       setPoolId(id);
     }
   }, [router]);
+  useEffect(() => {
+    const { poolId: id } = router.query;
+    if(id) {
+      setPoolId(id);
+      Cookies.set('poolId', id);
+    } else {
+      const poolIdFromCookie = Cookies.get('poolId');
+      if(poolIdFromCookie) {
+        setPoolId(poolIdFromCookie);
+      }
+    }
+    return () => {
+      Cookies.remove('poolId');
+    }
+  }, [router.query]);
   const { data: pool } = useSWR(() => `/api/question/creating/pools/${poolId}`, fetcher);
   useEffect(() => {
     setPoolData(pool);

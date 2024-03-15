@@ -8,17 +8,35 @@ import axios from "axios";
 import Layout from "../components/Layout";
 import Enrollusers from "../components/quiz/EnrollUsers";
 import Head from "next/head";
+import Cookies from "js-cookie";
+
 const fetcher = (url) => axios.get(url).then((resp) => resp.data);
 export default function QuizDetails() {
   const router = useRouter();
   const [quizId, setQuizId] = useState("");
+  // useEffect(() => {
+  //   const { quizId: id } = router.query;
+  //   if (id) {
+  //     setQuizId(id);
+  //   }
+  // }, [router]);
 
   useEffect(() => {
     const { quizId: id } = router.query;
-    if (id) {
+    if(id) {
       setQuizId(id);
+      Cookies.set('quizId', id);
+    } else {
+      const quizIdFromCookie = Cookies.get('quizId');
+      if(quizIdFromCookie) {
+        setQuizId(quizIdFromCookie);
+      }
     }
-  }, [router]);
+
+    return () => {
+      Cookies.remove('quizId');
+    }
+  }, [router.query]);
   const { data: quiz } = useSWR(() => `/api/quiz/details/${quizId}`, fetcher);
   return (
     <Box px={8} style={{ fontFamily: "Poppins" }}>
@@ -26,7 +44,7 @@ export default function QuizDetails() {
         <title>SE Assessment | Quiz Details</title>
       </Head>
       <Heading py={5}>Quiz Details</Heading>
-      <Box py={2} mx="auto">
+     <Box py={2} mx="auto">
         <SimpleGrid
           w={{ base: "full", xl: 11 / 12 }}
           columns={{ base: 1, lg: 11 }}
