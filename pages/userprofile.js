@@ -12,12 +12,31 @@ import axios from "axios";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import Head from "next/head"
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default function UserProfile () {
     const router = useRouter();
-    const { userId } = router.query;
+    const [userId, setUserId] = useState("");
+
+    useEffect(() => {
+        const { userId: id } = router.query;
+        if(id) {
+          setUserId(id);
+          Cookies.set('userId', id);
+        } else {
+          const userIdFromCookie = Cookies.get('userId');
+          if(userIdFromCookie) {
+            setUserId(userIdFromCookie);
+          }
+        }
+        return () => {
+            Cookies.remove('userId');
+          }
+      }, [router.query]);
 
     const { data } = useSWR(`/api/user/details/${userId}`, fetcher);
     const { data: attempts } = useSWR("/api/quiz/submissions", fetcher);

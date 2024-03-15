@@ -29,7 +29,27 @@ import { SiSwarm } from "react-icons/si";
 import { RiUserHeartFill, RiLogoutCircleFill } from "react-icons/ri";
 import { useSession, signOut } from "next-auth/react";
 import JoinQuiz from "./common/JoinQuiz";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const getTabIndexAdmin = (route) => {
+  switch(route) {
+    case "/profile": return 0;
+    case "/my_quizzes": return 1;
+    case "/create_quiz": return 2;
+    case "/my_pools": return 3;
+    case "/create_pool": return 4;
+    case "/users": return 5;
+    default: return 0;
+  }
+};
+const getTabIndexUser = (route) => {
+  switch(route) {
+    case "/profile": return 0;
+    case "/my_quizzes": return 1;
+    case "/my_submissions": return 2;
+    default: return 0;
+  }
+};
 
 export default function Navbar() {
   const bg = useColorModeValue("white", "gray.800");
@@ -50,10 +70,9 @@ export default function Navbar() {
 
       redirect: true,
       callbackUrl: callbackUrl
-    });
-    router.push(result.url);
+    })
   };
-
+  useEffect(() => {}, [router.pathname]);
   return (
     <Box shadow="md" fontFamily={"Poppins"}>
       <JoinQuiz open={open} setOpen={setOpen} />
@@ -129,7 +148,7 @@ export default function Navbar() {
           borderWidth={0}
           overflowX="auto"
         >
-          <Tabs borderBottomColor="transparent">
+          {data?.user?.isAdmin? (<Tabs borderBottomColor="transparent" index={getTabIndexAdmin(router.pathname)}>
             <TabList>
               <Tab
                 py={4}
@@ -147,18 +166,6 @@ export default function Navbar() {
               >
                 My Quizzes
               </Tab>
-              {!data?.user?.isAdmin && (
-                <Tab
-                  py={4}
-                  m={0}
-                  _focus={{ boxShadow: "none" }}
-                  onClick={() => router.replace("/my_submissions")}
-                >
-                  My Submissions
-                </Tab>
-              )}
-              {data?.user?.isAdmin && (
-                <>
                   <Tab
                     py={4}
                     m={0}
@@ -192,10 +199,35 @@ export default function Navbar() {
                   >
                     Users
                   </Tab>
-                </>
-              )}
             </TabList>
-          </Tabs>
+          </Tabs>):(<Tabs borderBottomColor="transparent" index={getTabIndexUser(router.pathname)}>
+            <TabList>
+              <Tab
+                py={4}
+                m={0}
+                _focus={{ boxShadow: "none" }}
+                onClick={() => router.replace("/profile")}
+              >
+                Quiz Platform
+              </Tab>
+              <Tab
+                py={4}
+                m={0}
+                _focus={{ boxShadow: "none" }}
+                onClick={() => router.replace("/my_quizzes")}
+              >
+                My Quizzes
+              </Tab>
+                <Tab
+                  py={4}
+                  m={0}
+                  _focus={{ boxShadow: "none" }}
+                  onClick={() => router.replace("/my_submissions")}
+                >
+                  My Submissions
+                </Tab>
+            </TabList>
+          </Tabs>)}
           <Spacer />
           <HStack spacing={3} alignItems="center">
             <InputGroup display={{ base: "none", lg: "block" }} ml="auto">
