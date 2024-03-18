@@ -42,7 +42,7 @@ const ConfirmDialog = ({
                     <AlertDialogHeader>{title}</AlertDialogHeader>
                     <AlertDialogCloseButton />
                     <AlertDialogBody>
-                    <Box mb={2}><b>Instructions:</b> <br/> 
+                    {/* <Box mb={2}><b>Instructions:</b> <br/> 
                     <Box marginLeft="3px">
                         <OrderedList>
                             <ListItem>Total Time Duration is</ListItem>
@@ -50,7 +50,7 @@ const ConfirmDialog = ({
                             <ListItem>After 3 warnings for not being in fullscreen mode, test will be auto submitted and no points will be given.</ListItem>
                         </OrderedList>
                     </Box>
-                    </Box>
+                    </Box> */}
                         {description}
                         </AlertDialogBody>
                     <AlertDialogFooter>

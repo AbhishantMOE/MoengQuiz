@@ -20,7 +20,6 @@ export default function MyQuizzes() {
         fetcher
     );
 
-    console.log(quizzes);
     
     const { data: quizzesTaken } = useSWR("/api/quiz/submissions", fetcher);
 

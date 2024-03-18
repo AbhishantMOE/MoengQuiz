@@ -48,24 +48,13 @@ async function removeQuestion(req, res) {
     await db.initClient();
 
     try {
-        //const question = await Question.findById(questionId);
-        //const quizId = question.quizId;
-
-        // Then: Remove the question from the Question collection
-        //await Question.findByIdAndDelete(questionId);
-        // At last: Remove the question from the respective Quiz
         let pool = await QuestionPoolSchema.findById(poolId);
-        // console.log(pool)
-        // The questions are plain JS objects, not mongoose docs, we have to find it manually
         const questionToRemove = pool.questions.find(question => question._id.toString() === questionId);
 
-        // Removing it from array
         const questionIndex = pool.questions.indexOf(questionToRemove);
         if (questionIndex !== -1) {
             pool.questions.splice(questionIndex, 1);
         }
-
-        // Telling mongoose that we've changed the questions array
         pool.markModified('questions');
         if(questionToRemove.difficulty === 'easy'){
                 pool.easy = pool.easy-1
@@ -77,7 +66,6 @@ async function removeQuestion(req, res) {
                 pool.hard = pool.hard-1
                 pool.markModified("hard")
         }
-        // Now, save it back to database
         await pool.save();
 
         return res.status(200).json({

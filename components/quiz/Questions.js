@@ -46,6 +46,7 @@ const Questions = ({ quiz }) => {
       quizId : quiz.id,
       questionId
     }
+
     await axios.delete(`/api/question/updating/questiondelupdate`,{data});
     const arr = questions.filter((question) => question._id != questionId)
     setQuestions(arr);

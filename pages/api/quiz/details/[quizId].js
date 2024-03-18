@@ -23,7 +23,6 @@ async function getQuizDetails(req, res) {
 
   try {
     const quiz = await QuizSchema.findById(quizId);
-    console.log(quiz);
     return res.status(200).json({
       id: quiz._id,
       title: quiz.title,

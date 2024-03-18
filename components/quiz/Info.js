@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 const Info = ({ quiz }) => {
     const router = useRouter();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    console.log(quiz);
     return (
       <Card>
         <Flex alignItems={"center"}>

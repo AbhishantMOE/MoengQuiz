@@ -6,8 +6,28 @@ export default async function handler(req, res) {
   switch (req.method) {
     case "POST":
       return createPoolQuestion(req, res);
+    case "DELETE":
+      return deletePool(req, res);
   }
 }
+
+async function deletePool(req, res) {
+  const db = new MongoDbClient();
+  await db.initClient();
+  const poolId = req.query.poolId;
+  
+  try {
+    await QuestionPoolSchema.findByIdAndDelete(poolId);
+    
+    return res.status(204).end();
+  } catch (err) {
+      console.log(err);
+      return res.status(400).json({
+          message: "An error was encountered while deleting the pool",
+      });
+  }
+}
+
 
 async function createPoolQuestion(req, res) {
   const {

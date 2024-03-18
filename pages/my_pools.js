@@ -1,42 +1,24 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import AuthorQuizzes from "../components/quiz/AuthorQuizzes";
-import StudentQuizzes from "../components/quiz/StudentQuizzes";
-import Layout from "../components/Layout";
-import Head from "next/head"
-import {
-    Box,
-    Flex,
-    Tag,
-    IconButton,
-    Heading,
-    Text,
-    HStack,
-    Tooltip,
-    useToast,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, Heading, HStack, Tooltip, IconButton, useToast } from "@chakra-ui/react";
 import Card from "../components/Card";
 import { CgTrash } from "react-icons/cg";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { removeQuiz } from "../services/quiz";
+import { deletePool } from "../services/createPoolQuestion";
 import ConfirmDialog from "../components/common/ConfirmDialog";
-
+import Layout from "../components/Layout";
+import Head from "next/head"
 
 const fetcher = (url) => axios.get(url).then((resp) => resp.data);
 
 export default function MyQuizzes() {
     const { data: session } = useSession();
-
-    const { data: poolList } = useSWR(
-          "/api/question/creating/fetchPools",
-          fetcher
-        );
+    const { data: poolList } = useSWR("api/question/creating/fetchPools", fetcher);
     const [poolsState, setPoolsState] = useState(poolList);
-    useEffect(() => {
-        setPoolsState(poolList);
-    }, poolList);
+
+    useEffect(() => setPoolsState(poolList), [poolList]);
 
     return (
         <>
@@ -48,31 +30,60 @@ export default function MyQuizzes() {
             <Heading py={5}>My Pools</Heading>
             <Card>
                 {poolsState?.length === 0 ? (
-                    <Text>You haven&apos;t authored any quizzes yet.</Text>
+                    <Text>You haven&apos;t created any pools yet.</Text>
                 ) : (
                     <>
                         {poolsState?.map((pool) => (
-                            <PoolItem key={pool?._id} pool={pool} setPoolsState={setPoolsState} />
+                            <PoolItem key={pool?._id} pool={pool} />
                         ))}
                     </>
                 )}
             </Card>
-        </Box>}
+            </Box>}
         </>
     );
 }
 
 MyQuizzes.getLayout = function getLayout(page) {
-    return <Layout>{page}</Layout>;
+return <Layout>{page}</Layout>;
 };
 
-
-const PoolItem = ({ pool, setPoolsState }) => {
+const PoolItem = ({ pool }) => {
     const router = useRouter();
     const toast = useToast();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    async function handleDeletePool() {
+        setLoading(true);
+        try {
+            await deletePool(pool.id)
+        
+    //         mutate("/api/question/creating/fetchPools", (data) => 
+    // data ? data.filter((p) => p._id !== pool._id) : [], false);
+            
+            toast({
+                description: "Pool deleted successfully",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch (error) {
+            toast({
+                description: error.message,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        } finally {
+            setLoading(false);
+            setShowConfirmModal(false);
+            setTimeout(() => {
+                window.location.reload()
+                
+            },100)
+        }
+    }
 
     return (
         <Box mb={6}>
@@ -126,7 +137,15 @@ const PoolItem = ({ pool, setPoolsState }) => {
                     height: 2,
                 }}
             />
+            <ConfirmDialog 
+                title="Delete Pool" 
+                isOpen={showConfirmModal} 
+                isLoading={loading} 
+                onClose={() => setShowConfirmModal(false)}
+                onClickConfirm={handleDeletePool}
+                description={'Are you sure you want to delete this pool?'}
+            >
+            </ConfirmDialog>
         </Box>
     );
 };
-

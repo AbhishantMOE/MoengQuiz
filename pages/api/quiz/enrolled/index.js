@@ -19,7 +19,6 @@ async function getEnrolledQuizzes(req, res) {
         if(req.query.flag === '1'){
             const fields = 'title duration description scheduledFor passingMarks attempts';
             const quizzes = await QuizSchema.find({ 'usersEnrolled': session.user.id }).select(fields);
-            console.log(quizzes);
             return res.status(200).json(quizzes)
         } else {
             const quizzes = await QuizSchema.find({ 'usersEnrolled': session.user.id }); 

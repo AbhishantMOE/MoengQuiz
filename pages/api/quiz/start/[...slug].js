@@ -36,8 +36,6 @@ async function startQuiz(req, res) {
         error: "You are not enrolled to the quiz",
       });
     }
-    console.log(new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata'})).toISOString().replace("Z",""))
-    console.log(new Date(new Date(quiz.scheduledFor).toISOString().replace("Z", "")))
     if (
       new Date(new Date(quiz.scheduledFor).toISOString().replace("Z", "")) >=
       new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata'})).toISOString().replace("Z","")

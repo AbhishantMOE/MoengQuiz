@@ -36,13 +36,6 @@ import {
     useEffect(() => {
       setQuestions(pool?.questions)
     },[pool])
-    console.log(questions);
-
-    for (let i = 0; i < questions?.length; i++) {
-      if(questions[i].type === 'Hotspot'){
-        console.log(questions[i].correctAnswer[0]);
-      }
-    }
   
     const handleDelete = async (questionId) => {
       const poolId = pool?.id

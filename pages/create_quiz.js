@@ -156,9 +156,6 @@ export default function CreateQuiz() {
 
     const currentDate = new Date();
     currentDate.setSeconds(0, 0); 
-    console.log(currentDate,"now");
-    console.log(Date(scheduledFor), "start time");
-    console.log(Date(endTime), "end time");
 
     if (new Date(scheduledFor) <= currentDate || new Date(endTime) <= currentDate) {
         toast({
