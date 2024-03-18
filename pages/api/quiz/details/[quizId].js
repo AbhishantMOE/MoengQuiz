@@ -102,16 +102,13 @@ async function removeQuiz(req, res) {
       });
     }
     const quiz = await QuizSchema.findById(quizId);
-    //Delete the questions
     const questions = quiz?.questions;
     if (questions && questions.length > 0) {
       for (let question of questions) {
         await Question.findByIdAndDelete(question._id);
       }
     }
-    //Remove the quizId from enrolledQuizes in all users with the quizId.
     await UserSchema.updateMany({}, { $pull: { quizzesEnrolled: quizId } });
-    // Now remove the quiz
     await QuizSchema.findByIdAndDelete(quizId);
 
     return res.status(200).json({

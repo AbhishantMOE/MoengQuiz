@@ -19,7 +19,9 @@ async function deletePool(req, res) {
   try {
     await QuestionPoolSchema.findByIdAndDelete(poolId);
     
-    return res.status(204).end();
+    return res.status(200).json({
+      message: "Pool deleted successfully",
+    });
   } catch (err) {
       console.log(err);
       return res.status(400).json({

@@ -56,33 +56,33 @@ const PoolItem = ({ pool }) => {
 
     async function handleDeletePool() {
         setLoading(true);
-        try {
-            await deletePool(pool.id)
-        
-    //         mutate("/api/question/creating/fetchPools", (data) => 
-    // data ? data.filter((p) => p._id !== pool._id) : [], false);
-            
-            toast({
-                description: "Pool deleted successfully",
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-            });
-        } catch (error) {
-            toast({
-                description: error.message,
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-            });
-        } finally {
+        deletePool(pool.id).then((data) => {
+            if (data.message) {
+                setShowConfirmModal(false);
+                toast({
+                    title: "Success",
+                    description: data?.message,
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                });
+                setTimeout(() => {
+                    window.location.reload()
+                },250)
+            } else {
+                toast({
+                    title: "Error",
+                    description: data?.error,
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                });
+            }
+        })
+        .finally(() => {
             setLoading(false);
             setShowConfirmModal(false);
-            setTimeout(() => {
-                window.location.reload()
-                
-            },100)
-        }
+        });
     }
 
     return (
