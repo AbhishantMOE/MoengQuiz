@@ -148,6 +148,45 @@ export default function Quiz() {
     };
   }, [toast]);
 
+  useEffect(() => {
+    const preventRightClick = event => {
+        event.preventDefault();
+        toast({
+            title: "Warning",
+            description: "Right click is disabled on this page",
+            status: "warning",
+            duration: 5000,
+            isClosable: true,
+        });
+    };
+
+    const preventInspect = (event) => {
+        event.preventDefault();
+
+        if ((event.ctrlKey && event.shiftKey && event.keyCode == 'J'.charCodeAt(0)) || // For control + shift + j
+        (event.ctrlKey && event.shiftKey && event.keyCode == 'C'.charCodeAt(0)) || // For control + shift + c
+        (event.metaKey && event.altKey && event.keyCode == 'I'.charCodeAt(0))) {  // For cmd/option + i or Windows key + alt + i
+
+            event.preventDefault();
+            toast({
+                title: "Warning",
+                description: "Inspect element is disabled on this page",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    };
+   
+    window.addEventListener('contextmenu', preventRightClick);
+    window.addEventListener('keydown', preventInspect);
+
+    return () => {
+        window.removeEventListener('contextmenu', preventRightClick);
+        window.removeEventListener('keydown', preventInspect);
+    };
+}, [toast]);
+
   const { data } = useSWR(`/api/quiz/student?quizId=${quizId}`, fetcher);
 
   /**
