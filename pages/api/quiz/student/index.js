@@ -18,8 +18,18 @@ async function getCachedQuiz(req, res) {
   let user = await UserSchema.findById(session.user.id);
   const quiz = await QuizSchema.findById(quizId);
   const questions = quiz.questions;
+  const cleanedQuestions = questions.map((question) => {
+    const {correctAnswer, dropdowns, ...rest} = question;
+
+    if (rest.type === 'Fill') {
+        const cleanedDropdowns = dropdowns.map(({correctAnswer, ...restDropdown}) => restDropdown);
+        return {...rest, dropdowns: cleanedDropdowns};
+    }
+    
+    return rest;
+});
   const quizData = {
-    questions: questions,
+    questions: cleanedQuestions,
     duration: quiz.duration,
   };
 

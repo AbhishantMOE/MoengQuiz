@@ -7,6 +7,7 @@ import Layout from "../components/Layout";
 import Head from "next/head"
 
 const fetcher = (url) => axios.get(url).then((resp) => resp.data);
+const flag = "1";
 
 export default function MyQuizzes() {
     const { data: session } = useSession();
@@ -15,10 +16,12 @@ export default function MyQuizzes() {
         () =>
             session?.user?.isAdmin
                 ? "/api/user/my_quizzes"
-                : "/api/quiz/enrolled",
+                : `/api/quiz/enrolled?flag=${flag}`,
         fetcher
     );
 
+    console.log(quizzes);
+    
     const { data: quizzesTaken } = useSWR("/api/quiz/submissions", fetcher);
 
     return (
