@@ -39,6 +39,8 @@ const getTabIndexAdmin = (route) => {
     case "/my_pools": return 3;
     case "/create_pool": return 4;
     case "/users": return 5;
+    case "/pool_detail": return 3;
+    case "/quiz_detail": return 1;
     default: return 0;
   }
 };
@@ -47,6 +49,7 @@ const getTabIndexUser = (route) => {
     case "/profile": return 0;
     case "/my_quizzes": return 1;
     case "/my_submissions": return 2;
+    case "/results": return 2;
     default: return 0;
   }
 };

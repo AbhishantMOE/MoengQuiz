@@ -58,7 +58,6 @@ const QuizItem = ({ quiz, user, quizzesTaken}) => {
         }
     }
     const start = () => {
-
         startQuiz(quiz._id, user.id)
             .then((data) => {
                 if (data?.error) {

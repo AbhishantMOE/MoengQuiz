@@ -95,24 +95,23 @@ async function markQuiz(req, res) {
     for (let i = 0; i < questionsU.length; i++) {
       const item = questionsU[i];
       const userAnswer = questions[i].selectedOption;
-
       if (item.type === "Hotspot") {
         let userClickedTop
         let userClickedLeft
         if(userAnswer){
-
-           userClickedTop = userAnswer.top;
-           userClickedLeft = userAnswer.left;
+          
+          userClickedTop = userAnswer.top;
+          userClickedLeft = userAnswer.left;
           
         }else{
-           userClickedTop = 0;
-           userClickedLeft = 0;
+          userClickedTop = 0;
+          userClickedLeft = 0;
         }
         
-        const correctTop = item.correctAnswer.top;
-        const correctLeft = item.correctAnswer.left;
-        const correctBottom = correctTop + item.correctAnswer.height;
-        const correctRight = correctLeft + item.correctAnswer.width;
+        const correctTop = item.correctAnswer[0].top;
+        const correctLeft = item.correctAnswer[0].left;
+        const correctBottom = correctTop + item.correctAnswer[0].height;
+        const correctRight = correctLeft + item.correctAnswer[0].width;
         if (
           userClickedTop >= correctTop &&
           userClickedTop <= correctBottom &&
@@ -126,6 +125,7 @@ async function markQuiz(req, res) {
         if (userAnsArray.length === 0) {
           score += 0;
         }
+        console.log("dcjkbdsjcbsocesojcwocnowsc")
         if (
           userAnsArray.sort().join(",") === item.correctAnswer.sort().join(",")
         ) {
@@ -173,7 +173,6 @@ async function markQuiz(req, res) {
 
       newAttempt.responses.push(newResponse._id);
     }
-
     newAttempt.score = score;
     await newAttempt.save();
 

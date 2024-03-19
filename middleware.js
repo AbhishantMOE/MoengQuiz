@@ -41,6 +41,7 @@ export const config = {
     "/create_pool",
     "/create_quiz",
     "/create_question",
+    "/create_question2",
     "/my_pools",
     "/my_submissions",
     "/pool_detail",
